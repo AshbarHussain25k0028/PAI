@@ -1,0 +1,56 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Local secrets and configuration
+.env
+.env.*
+!.env.example
+config.local.*
+secrets.*
+*.pem
+*.key
+
+# Notebook checkpoints and editor files
+.ipynb_checkpoints/
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local LMS records, student submissions, and generated outputs
+data/private/
+data/local/
+data/runtime/
+storage/
+uploads/
+submissions/
+logs/
+*.log
+*.sqlite
+*.sqlite3
+*.db
+outputs/
+
+# Python build artifacts
+build/
+dist/
+*.egg-info/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
