@@ -7,7 +7,7 @@ This roadmap describes intended work. Only repository documentation is in place;
 - [x] Prepare the academic project proposal.
 - [x] Document the scope, course alignment, and conditional AI plan.
 - [x] Establish a README, contribution guide, and Python ignore rules.
-- [ ] Agree on member responsibilities and acceptance criteria.
+- [x] Agree on member responsibilities and acceptance criteria.
 
 ## 2. Build the core LMS
 

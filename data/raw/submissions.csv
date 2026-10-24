@@ -1,0 +1,10 @@
+student_id,assignment_id,submitted_at,text,marks,feedback
+S01,AS01,2026-10-18 20:15,Stored marks in a dict keyed by student ID and used a set for unique courses.,9,Clear and correct. Good use of a set.
+S02,AS01,2026-10-19 22:40,Used a list of tuples for marks and a dict to look up names.,8,Works well. Explain why a dict is faster.
+S03,AS01,2026-10-21 09:05,Made a dict of lists for each student's marks.,6,Submitted after the deadline. Add input checks.
+S04,AS01,2026-10-20 18:30,Built the gradebook with nested dicts and printed averages.,,
+S05,AS01,2026-10-20 23:10,Used sets to find students who took both courses.,,
+S01,AS02,2026-10-22 17:45,Book and Member classes with borrow and return methods.,,
+S01,AS03,2026-10-21 19:00,Dropped duplicate rows and filled missing marks with NaN.,10,Excellent cleaning steps.
+S02,AS03,2026-10-22 21:30,Used dropna and groupby to get averages per subject.,7,Do not drop rows that are only partly missing.
+S04,AS03,2026-10-22 23:50,"Read the CSV, renamed columns and removed duplicates.",,

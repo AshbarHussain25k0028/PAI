@@ -1,0 +1,4 @@
+A class is a blueprint and an object is one thing made from it.
+__init__ is the constructor that sets the starting attributes.
+Inheritance lets a child class reuse a parent class. Overriding replaces a parent method.
+Encapsulation hides data behind methods or a @property.

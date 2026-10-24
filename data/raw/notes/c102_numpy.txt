@@ -1,0 +1,4 @@
+A NumPy array holds numbers of one type in a grid.
+Broadcasting lets you write scores / 10 * 100 for the whole array.
+mean(axis=0) averages each column, mean(axis=1) each row.
+np.nan marks a missing value; np.nanmean ignores it.

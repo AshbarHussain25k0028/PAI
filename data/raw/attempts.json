@@ -1,0 +1,274 @@
+[
+  {
+    "attempt_id": "AT01",
+    "student_id": "S01",
+    "quiz_id": "Q01",
+    "attempted_on": "2026-10-12 10:15",
+    "answers": [
+      2,
+      1,
+      0,
+      1,
+      1,
+      1
+    ],
+    "score": 6,
+    "max_score": 6
+  },
+  {
+    "attempt_id": "AT02",
+    "student_id": "S02",
+    "quiz_id": "Q01",
+    "attempted_on": "2026-10-12 10:20",
+    "answers": [
+      2,
+      1,
+      0,
+      1,
+      0,
+      1
+    ],
+    "score": 5,
+    "max_score": 6
+  },
+  {
+    "attempt_id": "AT03",
+    "student_id": "S03",
+    "quiz_id": "Q01",
+    "attempted_on": "2026-10-12 10:22",
+    "answers": [
+      0,
+      1,
+      2,
+      1,
+      0,
+      0
+    ],
+    "score": 2,
+    "max_score": 6
+  },
+  {
+    "attempt_id": "AT04",
+    "student_id": "S04",
+    "quiz_id": "Q01",
+    "attempted_on": "2026-10-12 11:05",
+    "answers": [
+      2,
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    "score": 5,
+    "max_score": 6
+  },
+  {
+    "attempt_id": "AT05",
+    "student_id": "S05",
+    "quiz_id": "Q01",
+    "attempted_on": "2026-10-13 09:40",
+    "answers": [
+      2,
+      1,
+      1,
+      3,
+      0,
+      1
+    ],
+    "score": 3,
+    "max_score": 6
+  },
+  {
+    "attempt_id": "AT06",
+    "student_id": "S06",
+    "quiz_id": "Q01",
+    "attempted_on": "2026-10-13 14:30",
+    "answers": [
+      2,
+      1,
+      0,
+      0,
+      1,
+      1
+    ],
+    "score": 5,
+    "max_score": 6
+  },
+  {
+    "attempt_id": "AT07",
+    "student_id": "S07",
+    "quiz_id": "Q01",
+    "attempted_on": "2026-10-14 16:10",
+    "answers": [
+      3,
+      1,
+      0,
+      1,
+      2,
+      0
+    ],
+    "score": 3,
+    "max_score": 6
+  },
+  {
+    "attempt_id": "AT08",
+    "student_id": "S01",
+    "quiz_id": "Q02",
+    "attempted_on": "2026-10-19 10:10",
+    "answers": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      2
+    ],
+    "score": 6,
+    "max_score": 6
+  },
+  {
+    "attempt_id": "AT09",
+    "student_id": "S02",
+    "quiz_id": "Q02",
+    "attempted_on": "2026-10-19 10:12",
+    "answers": [
+      1,
+      1,
+      0,
+      1,
+      0,
+      2
+    ],
+    "score": 4,
+    "max_score": 6
+  },
+  {
+    "attempt_id": "AT10",
+    "student_id": "S03",
+    "quiz_id": "Q02",
+    "attempted_on": "2026-10-19 10:30",
+    "answers": [
+      1,
+      0,
+      1,
+      2,
+      1,
+      0
+    ],
+    "score": 3,
+    "max_score": 6
+  },
+  {
+    "attempt_id": "AT11",
+    "student_id": "S04",
+    "quiz_id": "Q02",
+    "attempted_on": "2026-10-20 12:00",
+    "answers": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "score": 5,
+    "max_score": 6
+  },
+  {
+    "attempt_id": "AT12",
+    "student_id": "S05",
+    "quiz_id": "Q02",
+    "attempted_on": "2026-10-20 13:45",
+    "answers": [
+      0,
+      1,
+      3,
+      1,
+      0,
+      2
+    ],
+    "score": 3,
+    "max_score": 6
+  },
+  {
+    "attempt_id": "AT13",
+    "student_id": "S07",
+    "quiz_id": "Q02",
+    "attempted_on": "2026-10-21 15:20",
+    "answers": [
+      1,
+      2,
+      1,
+      1,
+      1,
+      2
+    ],
+    "score": 5,
+    "max_score": 6
+  },
+  {
+    "attempt_id": "AT14",
+    "student_id": "S01",
+    "quiz_id": "Q03",
+    "attempted_on": "2026-10-16 11:00",
+    "answers": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "score": 6,
+    "max_score": 6
+  },
+  {
+    "attempt_id": "AT15",
+    "student_id": "S02",
+    "quiz_id": "Q03",
+    "attempted_on": "2026-10-16 11:05",
+    "answers": [
+      0,
+      1,
+      1,
+      0,
+      1,
+      1
+    ],
+    "score": 4,
+    "max_score": 6
+  },
+  {
+    "attempt_id": "AT16",
+    "student_id": "S03",
+    "quiz_id": "Q03",
+    "attempted_on": "2026-10-16 11:20",
+    "answers": [
+      1,
+      0,
+      1,
+      1,
+      0,
+      1
+    ],
+    "score": 4,
+    "max_score": 6
+  },
+  {
+    "attempt_id": "AT17",
+    "student_id": "S04",
+    "quiz_id": "Q03",
+    "attempted_on": "2026-10-17 09:30",
+    "answers": [
+      0,
+      0,
+      1,
+      1,
+      1,
+      0
+    ],
+    "score": 3,
+    "max_score": 6
+  }
+]

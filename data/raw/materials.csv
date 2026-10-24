@@ -1,0 +1,8 @@
+material_id,course_id,title,topic,file_name
+M01,C101,"Lists, tuples, dicts and sets",data-structures,c101_data_structures.txt
+M02,C101,Writing functions,functions,c101_functions.txt
+M03,C101,Classes and objects,oop,c101_oop.txt
+M04,C101,Files and exceptions,files,c101_files.txt
+M05,C102,NumPy arrays,numpy,c102_numpy.txt
+M06,C102,Pandas DataFrames,pandas,c102_pandas.txt
+M07,C102,Making charts,charts,c102_charts.txt

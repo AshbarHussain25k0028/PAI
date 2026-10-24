@@ -1,0 +1,3 @@
+A line chart shows change over time, a bar chart compares groups and a histogram shows a spread of values.
+Every chart needs a title and axis labels.
+plt.savefig saves the chart to a file.

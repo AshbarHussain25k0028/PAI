@@ -84,10 +84,10 @@ The intended application will check role and enrollment permissions. Revision su
 
 ## Team and course
 
-| Team member | GitHub |
-| --- | --- |
-| Ashbar Hussain | [@AshbarHussain25k0028](https://github.com/AshbarHussain25k0028) |
-| Muhammad Mudassir | — |
+| Team member | Roll number | GitHub |
+| --- | --- | --- |
+| Ashbar Hussain | 25k-0028 | [@AshbarHussain25k0028](https://github.com/AshbarHussain25k0028) |
+| Muhammad Mudassir | 25k-0153 | [@k250153-sudo](https://github.com/k250153-sudo) |
 
 **Course:** AL-2001 · Programming for Artificial Intelligence (Laboratory)  
 **Section:** BAI-3A  

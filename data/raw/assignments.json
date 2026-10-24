@@ -1,0 +1,23 @@
+[
+  {
+    "assignment_id": "AS01",
+    "course_id": "C101",
+    "title": "Gradebook with dicts and sets",
+    "deadline": "2026-10-20 23:59",
+    "max_marks": 10
+  },
+  {
+    "assignment_id": "AS02",
+    "course_id": "C101",
+    "title": "Library system with classes",
+    "deadline": "2026-11-06 23:59",
+    "max_marks": 20
+  },
+  {
+    "assignment_id": "AS03",
+    "course_id": "C102",
+    "title": "Clean a marks table with Pandas",
+    "deadline": "2026-10-22 23:59",
+    "max_marks": 10
+  }
+]

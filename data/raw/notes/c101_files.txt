@@ -1,0 +1,4 @@
+Always open files with a with block so they are closed automatically.
+json.load and json.dump read and write JSON.
+csv.DictReader reads each row as a dict.
+Catch specific errors such as FileNotFoundError, never use a bare except.

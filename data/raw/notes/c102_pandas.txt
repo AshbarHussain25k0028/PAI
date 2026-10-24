@@ -1,0 +1,4 @@
+A DataFrame is a table with labelled rows and columns.
+read_csv loads a CSV file into a DataFrame.
+dropna and fillna handle missing values.
+groupby splits rows into groups and merge joins two tables on a column.

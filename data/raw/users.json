@@ -1,0 +1,57 @@
+[
+  {
+    "user_id": "A01",
+    "name": "Sana Qureshi",
+    "role": "admin"
+  },
+  {
+    "user_id": "T01",
+    "name": "Imran Siddiqui",
+    "role": "teacher"
+  },
+  {
+    "user_id": "T02",
+    "name": "Farah Naqvi",
+    "role": "teacher"
+  },
+  {
+    "user_id": "S01",
+    "name": "Ali Raza",
+    "role": "student"
+  },
+  {
+    "user_id": "S02",
+    "name": "Ayesha Khan",
+    "role": "student"
+  },
+  {
+    "user_id": "S03",
+    "name": "Bilal Ahmed",
+    "role": "student"
+  },
+  {
+    "user_id": "S04",
+    "name": "Hira Malik",
+    "role": "student"
+  },
+  {
+    "user_id": "S05",
+    "name": "Usman Tariq",
+    "role": "student"
+  },
+  {
+    "user_id": "S06",
+    "name": "Zainab Hassan",
+    "role": "student"
+  },
+  {
+    "user_id": "S07",
+    "name": "Hamza Sheikh",
+    "role": "student"
+  },
+  {
+    "user_id": "S08",
+    "name": "Maryam Javed",
+    "role": "student"
+  }
+]

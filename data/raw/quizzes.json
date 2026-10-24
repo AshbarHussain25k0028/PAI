@@ -1,0 +1,239 @@
+[
+  {
+    "quiz_id": "Q01",
+    "course_id": "C101",
+    "title": "Data structures and functions",
+    "questions": [
+      {
+        "question_id": "Q01-1",
+        "text": "Which collection removes duplicates automatically?",
+        "options": [
+          "list",
+          "tuple",
+          "set",
+          "str"
+        ],
+        "answer_index": 2,
+        "topic": "data-structures"
+      },
+      {
+        "question_id": "Q01-2",
+        "text": "Which collection cannot be changed after it is made?",
+        "options": [
+          "list",
+          "tuple",
+          "dict",
+          "set"
+        ],
+        "answer_index": 1,
+        "topic": "data-structures"
+      },
+      {
+        "question_id": "Q01-3",
+        "text": "What is the average time to look up a key in a dict?",
+        "options": [
+          "O(1)",
+          "O(log n)",
+          "O(n)",
+          "O(n^2)"
+        ],
+        "answer_index": 0,
+        "topic": "data-structures"
+      },
+      {
+        "question_id": "Q01-4",
+        "text": "Which keyword creates a function?",
+        "options": [
+          "func",
+          "def",
+          "lambda",
+          "fn"
+        ],
+        "answer_index": 1,
+        "topic": "functions"
+      },
+      {
+        "question_id": "Q01-5",
+        "text": "What does sorted(nums, key=lambda x: -x) do?",
+        "options": [
+          "sorts ascending",
+          "sorts descending",
+          "removes negatives",
+          "raises an error"
+        ],
+        "answer_index": 1,
+        "topic": "functions"
+      },
+      {
+        "question_id": "Q01-6",
+        "text": "A variable made inside a function is...",
+        "options": [
+          "global",
+          "local",
+          "constant",
+          "shared"
+        ],
+        "answer_index": 1,
+        "topic": "functions"
+      }
+    ]
+  },
+  {
+    "quiz_id": "Q02",
+    "course_id": "C101",
+    "title": "Classes and files",
+    "questions": [
+      {
+        "question_id": "Q02-1",
+        "text": "Which method is the constructor?",
+        "options": [
+          "__str__",
+          "__init__",
+          "__call__",
+          "__new_obj__"
+        ],
+        "answer_index": 1,
+        "topic": "oop"
+      },
+      {
+        "question_id": "Q02-2",
+        "text": "A child class replacing a parent method is called...",
+        "options": [
+          "overloading",
+          "overriding",
+          "hiding",
+          "casting"
+        ],
+        "answer_index": 1,
+        "topic": "oop"
+      },
+      {
+        "question_id": "Q02-3",
+        "text": "Which decorator makes a read-only attribute?",
+        "options": [
+          "@static",
+          "@property",
+          "@final",
+          "@private"
+        ],
+        "answer_index": 1,
+        "topic": "oop"
+      },
+      {
+        "question_id": "Q02-4",
+        "text": "Why open files with a with block?",
+        "options": [
+          "it is faster",
+          "the file is closed automatically",
+          "it encrypts the file",
+          "it is required for CSV"
+        ],
+        "answer_index": 1,
+        "topic": "files"
+      },
+      {
+        "question_id": "Q02-5",
+        "text": "Which function writes a Python dict to a JSON file?",
+        "options": [
+          "json.load",
+          "json.dump",
+          "json.read",
+          "json.parse"
+        ],
+        "answer_index": 1,
+        "topic": "files"
+      },
+      {
+        "question_id": "Q02-6",
+        "text": "Which error is raised when a file does not exist?",
+        "options": [
+          "KeyError",
+          "ValueError",
+          "FileNotFoundError",
+          "IndexError"
+        ],
+        "answer_index": 2,
+        "topic": "files"
+      }
+    ]
+  },
+  {
+    "quiz_id": "Q03",
+    "course_id": "C102",
+    "title": "NumPy, Pandas and charts",
+    "questions": [
+      {
+        "question_id": "Q03-1",
+        "text": "What does arr.mean(axis=0) average?",
+        "options": [
+          "each row",
+          "each column",
+          "the whole array",
+          "nothing"
+        ],
+        "answer_index": 1,
+        "topic": "numpy"
+      },
+      {
+        "question_id": "Q03-2",
+        "text": "Which function averages while ignoring NaN?",
+        "options": [
+          "np.mean",
+          "np.nanmean",
+          "np.average",
+          "np.median"
+        ],
+        "answer_index": 1,
+        "topic": "numpy"
+      },
+      {
+        "question_id": "Q03-3",
+        "text": "Which Pandas function loads a CSV file?",
+        "options": [
+          "pd.load_csv",
+          "pd.read_csv",
+          "pd.open",
+          "pd.csv"
+        ],
+        "answer_index": 1,
+        "topic": "pandas"
+      },
+      {
+        "question_id": "Q03-4",
+        "text": "Which method joins two DataFrames on a column?",
+        "options": [
+          "concat",
+          "merge",
+          "append",
+          "zip"
+        ],
+        "answer_index": 1,
+        "topic": "pandas"
+      },
+      {
+        "question_id": "Q03-5",
+        "text": "Which chart best shows how scores are spread?",
+        "options": [
+          "pie chart",
+          "histogram",
+          "line chart",
+          "table"
+        ],
+        "answer_index": 1,
+        "topic": "charts"
+      },
+      {
+        "question_id": "Q03-6",
+        "text": "Which call saves a Matplotlib chart to a file?",
+        "options": [
+          "plt.show",
+          "plt.savefig",
+          "plt.write",
+          "plt.export"
+        ],
+        "answer_index": 1,
+        "topic": "charts"
+      }
+    ]
+  }
+]

@@ -1,0 +1,5 @@
+Python has four built-in collections.
+A list keeps items in order and can change: marks = [7, 9, 6].
+A tuple keeps items in order but cannot change: point = (3, 4).
+A dict maps keys to values: ages = {"S01": 19}. Looking up a key is O(1).
+A set keeps unique items only: enrolled = {"S01", "S02"}. Checking membership is O(1).

@@ -1,0 +1,4 @@
+A function groups steps under a name: def area(w, h): return w * h.
+Parameters can have defaults: def greet(name="student").
+Variables made inside a function are local to it (scope).
+A lambda is a small one-line function, often used with sorted(key=...).

@@ -43,7 +43,8 @@ logs/
 *.sqlite
 *.sqlite3
 *.db
-outputs/
+data/processed/*
+!data/processed/.gitkeep
 
 # Python build artifacts
 build/
