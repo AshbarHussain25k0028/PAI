@@ -29,6 +29,7 @@ other by plain name (for example `from users import Student`).
 | `parse_datetime` | text | datetime.datetime | O(1) | Muhammad Mudassir | 2 |
 | `format_datetime` | moment | the date as text in DATE_FORMAT. | O(1) | Muhammad Mudassir | 2 |
 | `make_id` | prefix, existing_ids | a new ID that is not in existing_ids. | O(n) for n existing IDs | Muhammad Mudassir | 2 |
+| `require_text` (helper) | value, field | the value stripped; ValidationError if missing or empty. | O(k) for k characters | Muhammad Mudassir | 2 |
 
 ## `courses.py` (owner: Muhammad Mudassir, Part 2)
 
