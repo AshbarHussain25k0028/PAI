@@ -13,13 +13,14 @@ polymorphism.
 
 Key data structure: all users live in a dict {user_id: User}, so login and
 lookups are O(1).
-
-INTERFACE STUB (Part 1): bodies are written in Part 3.
 """
 
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+
+from exceptions import NotFoundError, ValidationError
+from utils import require_text
 
 
 class User(ABC):
@@ -39,7 +40,29 @@ class User(ABC):
             ValidationError: if the ID or name is empty.
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 3")
+        # IDs are kept in upper case so "s01" and "S01" are the same account.
+        self._user_id = require_text(user_id, "user_id").upper()
+        self._name = require_text(name, "name")
+
+    @property
+    def user_id(self) -> str:
+        """The account ID (read-only).
+
+        Returns:
+            e.g. "S01".
+        Complexity: O(1).
+        """
+        return self._user_id
+
+    @property
+    def name(self) -> str:
+        """The person's display name (read-only).
+
+        Returns:
+            e.g. "Ali Raza".
+        Complexity: O(1).
+        """
+        return self._name
 
     @property
     @abstractmethod
@@ -72,6 +95,15 @@ class User(ABC):
         Complexity: Student/Admin O(1); Teacher O(c) for c courses.
         """
 
+    def __repr__(self) -> str:
+        """Short text form, handy when printing in the console.
+
+        Returns:
+            e.g. "Student(S01, 'Ali Raza')".
+        Complexity: O(1).
+        """
+        return f"{type(self).__name__}({self.user_id}, {self.name!r})"
+
     def describe(self) -> str:
         """One-line summary of the account.
 
@@ -79,7 +111,7 @@ class User(ABC):
             text such as "S01 - Ali Raza (student)".
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 3")
+        return f"{self.user_id} - {self.name} ({self.role})"
 
     def to_dict(self) -> dict:
         """The account as a plain dict for saving to JSON.
@@ -88,7 +120,7 @@ class User(ABC):
             {"user_id", "name", "role"}.
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 3")
+        return {"user_id": self.user_id, "name": self.name, "role": self.role}
 
 
 class Student(User):
@@ -102,7 +134,7 @@ class Student(User):
             "student".
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 3")
+        return "student"
 
     def menu_options(self) -> list[str]:
         """Menu lines for a student.
@@ -111,7 +143,8 @@ class Student(User):
             list of menu lines (my courses, quizzes, assignments, progress).
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 3")
+        return ["My courses and materials", "Take a quiz",
+                "My assignments", "My progress and revision tips", "Log out"]
 
     def can_view_student(self, student_id: str, courses: dict) -> bool:
         """A student may only see their own records.
@@ -123,7 +156,7 @@ class Student(User):
             True only if student_id is their own ID.
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 3")
+        return str(student_id).strip().upper() == self.user_id
 
 
 class Teacher(User):
@@ -137,7 +170,7 @@ class Teacher(User):
             "teacher".
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 3")
+        return "teacher"
 
     def menu_options(self) -> list[str]:
         """Menu lines for a teacher.
@@ -146,7 +179,8 @@ class Teacher(User):
             list of menu lines (materials, quizzes, marking, class report).
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 3")
+        return ["My courses and materials", "Quiz results",
+                "Mark submissions", "Class report", "Log out"]
 
     def can_view_student(self, student_id: str, courses: dict) -> bool:
         """A teacher may see students enrolled in a course they teach.
@@ -158,7 +192,10 @@ class Teacher(User):
             True if the student is in one of this teacher's courses.
         Complexity: O(c) for c courses (set lookup inside each course).
         """
-        raise NotImplementedError("Part 3")
+        student_id = str(student_id).strip().upper()
+        return any(course.teacher_id == self.user_id
+                   and course.is_enrolled(student_id)
+                   for course in courses.values())
 
 
 class Admin(User):
@@ -172,7 +209,7 @@ class Admin(User):
             "admin".
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 3")
+        return "admin"
 
     def menu_options(self) -> list[str]:
         """Menu lines for an admin.
@@ -181,7 +218,8 @@ class Admin(User):
             list of menu lines (accounts, enrollment, save).
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 3")
+        return ["List accounts", "Create an account",
+                "Enroll a student", "Save data", "Log out"]
 
     def can_view_student(self, student_id: str, courses: dict) -> bool:
         """An admin may see every student.
@@ -193,7 +231,11 @@ class Admin(User):
             always True.
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 3")
+        return True
+
+
+# Maps the "role" text in users.json to the class that builds it.
+ROLE_CLASSES = {"student": Student, "teacher": Teacher, "admin": Admin}
 
 
 def user_from_dict(record: dict) -> User:
@@ -209,7 +251,12 @@ def user_from_dict(record: dict) -> User:
         ValidationError: unknown role or missing field.
     Complexity: O(1).
     """
-    raise NotImplementedError("Part 3")
+    if not isinstance(record, dict):
+        raise ValidationError("Each user record must be a dict.")
+    role = require_text(record.get("role"), "role").lower()
+    if role not in ROLE_CLASSES:
+        raise ValidationError(f"Unknown role '{role}'.")
+    return ROLE_CLASSES[role](record.get("user_id"), record.get("name"))
 
 
 def find_user(users: dict, user_id: str) -> User:
@@ -224,4 +271,7 @@ def find_user(users: dict, user_id: str) -> User:
         NotFoundError: if there is no such user.
     Complexity: O(1).
     """
-    raise NotImplementedError("Part 3")
+    key = str(user_id).strip().upper()
+    if key not in users:
+        raise NotFoundError(f"No user with ID '{key}'.")
+    return users[key]

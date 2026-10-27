@@ -52,6 +52,7 @@ other by plain name (for example `from users import Student`).
 | Function | Inputs | Output | Big-O | Owner | Part |
 |---|---|---|---|---|---|
 | `User.__init__` | user_id, name | a new object | O(1) | Ashbar Hussain | 3 |
+| `User.user_id`, `User.name` (read-only properties) | – | the stored ID / name (added in Part 3) | O(1) | Ashbar Hussain | 3 |
 | `User.role (property)` | – | "student", "teacher" or "admin". | O(1) | Ashbar Hussain | 3 |
 | `User.menu_options` | – | list of menu lines, in display order. | O(1) | Ashbar Hussain | 3 |
 | `User.can_view_student` | student_id, courses | True if allowed. | Student/Admin O(1); Teacher O(c) for c courses | Ashbar Hussain | 3 |
