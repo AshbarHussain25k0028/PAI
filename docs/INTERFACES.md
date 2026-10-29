@@ -79,7 +79,7 @@ other by plain name (for example `from users import Student`).
 | `Quiz.max_score (property)` | – | the number of questions (1 mark each). | O(1) | Muhammad Mudassir | 4 |
 | `Quiz.grade_attempt` | answers | (score, topic_results) where topic_results is {topic: (correct, total)}. | O(n) for n questions | Muhammad Mudassir | 4 |
 | `Quiz.to_dict` | – | dict in the same shape as one record of quizzes.json. | O(n) for n questions | Muhammad Mudassir | 4 |
-| `Quiz.from_dict` | record | a new Quiz with its questions. | O(n) for n questions | Muhammad Mudassir | 4 |
+| `Quiz.from_dict` | record | a new Quiz with its questions. | O(n^2) worst case for n questions (duplicate check per add; n is small) | Muhammad Mudassir | 4 |
 | `weak_topics` | topic_results, threshold | list of topic names, lowest ratio first. | O(t log t) for t topics | Muhammad Mudassir | 7 |
 | `suggest_revision` | topic_results, course, threshold | [(topic, [Material, ...]), ...], weakest topic first. | O(t log t + t*m) for t topics and m materials | Muhammad Mudassir | 7 |
 
