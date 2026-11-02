@@ -12,11 +12,77 @@ Key data structures
                         assignment, found in O(1).
 - Submission._marks   : None until marked; changed only through the marks
                         property, which rejects values below 0 or above max.
-
-INTERFACE STUB (Part 1): bodies are written in Part 6.
 """
 
 from __future__ import annotations
+
+from datetime import datetime
+
+from exceptions import DuplicateError, ValidationError
+from utils import format_datetime, parse_datetime, require_text
+
+# Keys of assignments.json and columns of submissions.csv, in file order.
+ASSIGNMENT_FIELDS = ("assignment_id", "course_id", "title", "deadline",
+                     "max_marks")
+SUBMISSION_FIELDS = ("student_id", "assignment_id", "submitted_at", "text",
+                     "marks", "feedback")
+
+
+def _whole_number(value, field: str) -> int:
+    """Turn a value from a file or the keyboard into an int.
+
+    Accepts an int (but not a bool) or text made only of digits, such as
+    "9" or "-2" (the sign is checked later by the caller).
+
+    Args:
+        value: the value to check.
+        field: the field name, used in the error message.
+    Returns:
+        the value as an int.
+    Raises:
+        ValidationError: if it is not a whole number.
+    Complexity: O(k) for k characters.
+    """
+    # bool is a subclass of int in Python, so True would sneak through as 1.
+    if isinstance(value, int) and not isinstance(value, bool):
+        return value
+    if isinstance(value, str) and value.strip().lstrip("-").isdigit():
+        return int(value.strip())
+    raise ValidationError(f"'{field}' must be a whole number, got {value!r}.")
+
+
+def _check_moment(value, field: str) -> datetime:
+    """Check that a value is a datetime object.
+
+    Args:
+        value: the value to check.
+        field: the field name, used in the error message.
+    Returns:
+        the same datetime.
+    Raises:
+        ValidationError: if it is not a datetime.
+    Complexity: O(1).
+    """
+    if not isinstance(value, datetime):
+        raise ValidationError(f"'{field}' must be a date and time.")
+    return value
+
+
+def _check_max_marks(value) -> int:
+    """Check that the maximum mark is a whole number above 0.
+
+    Args:
+        value: the maximum mark (int or digit text).
+    Returns:
+        the maximum as an int.
+    Raises:
+        ValidationError: if it is not a whole number or is 0 or less.
+    Complexity: O(1).
+    """
+    max_marks = _whole_number(value, "max_marks")
+    if max_marks <= 0:
+        raise ValidationError(f"'max_marks' must be above 0, got {max_marks}.")
+    return max_marks
 
 
 class Assignment:
@@ -41,7 +107,21 @@ class Assignment:
             ValidationError: empty values or max_marks <= 0.
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 6")
+        self.assignment_id = require_text(assignment_id, "assignment_id")
+        self.course_id = require_text(course_id, "course_id")
+        self.title = require_text(title, "title")
+        self.deadline = _check_moment(deadline, "deadline")
+        self.max_marks = _check_max_marks(max_marks)
+
+    def __repr__(self) -> str:
+        """Short text form, handy when printing in the console.
+
+        Returns:
+            e.g. "Assignment(AS01, 'Gradebook', due 2026-10-20 23:59)".
+        Complexity: O(1).
+        """
+        return (f"Assignment({self.assignment_id}, {self.title!r}, "
+                f"due {format_datetime(self.deadline)})")
 
     def is_open(self, now) -> bool:
         """Check whether the deadline has not passed yet.
@@ -52,7 +132,7 @@ class Assignment:
             True if now <= deadline.
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 6")
+        return now <= self.deadline
 
     def to_dict(self) -> dict:
         """The assignment as a plain dict for JSON.
@@ -61,7 +141,9 @@ class Assignment:
             dict with the keys of assignments.json (deadline as text).
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 6")
+        record = {field: getattr(self, field) for field in ASSIGNMENT_FIELDS}
+        record["deadline"] = format_datetime(self.deadline)
+        return record
 
     @classmethod
     def from_dict(cls, record: dict) -> "Assignment":
@@ -76,7 +158,12 @@ class Assignment:
             ValidationError: missing field, bad date or bad max_marks.
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 6")
+        if not isinstance(record, dict):
+            raise ValidationError("Each assignment must be a dict of fields.")
+        deadline = require_text(record.get("deadline"), "deadline")
+        return cls(record.get("assignment_id"), record.get("course_id"),
+                   record.get("title"), parse_datetime(deadline),
+                   record.get("max_marks"))
 
 
 class Submission:
@@ -98,10 +185,30 @@ class Submission:
             text: the answer text.
             max_marks: copied from the Assignment, used by the marks setter.
         Raises:
-            ValidationError: if an ID is empty.
+            ValidationError: if an ID or the text is empty, the date is not
+                a datetime, or max_marks <= 0.
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 6")
+        self.student_id = require_text(student_id, "student_id")
+        self.assignment_id = require_text(assignment_id, "assignment_id")
+        self.submitted_at = _check_moment(submitted_at, "submitted_at")
+        self.text = require_text(text, "text")
+        self.max_marks = _check_max_marks(max_marks)
+        self._marks = None       # protected: only the marks setter changes it
+        self.feedback = ""
+
+    def __repr__(self) -> str:
+        """Short text form, handy when printing in the console.
+
+        Returns:
+            e.g. "Submission(S01, AS01, marks=9/10)".
+        Complexity: O(1).
+        """
+        if self._marks is None:
+            shown = "unmarked"
+        else:
+            shown = f"{self._marks}/{self.max_marks}"
+        return f"Submission({self.student_id}, {self.assignment_id}, marks={shown})"
 
     @property
     def key(self) -> tuple:
@@ -111,7 +218,7 @@ class Submission:
             (student_id, assignment_id).
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 6")
+        return (self.student_id, self.assignment_id)
 
     @property
     def marks(self):
@@ -121,7 +228,7 @@ class Submission:
             int, or None if not marked yet.
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 6")
+        return self._marks
 
     @marks.setter
     def marks(self, value: int) -> None:
@@ -133,7 +240,11 @@ class Submission:
             ValidationError: if value < 0 or value > max_marks.
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 6")
+        value = _whole_number(value, "marks")
+        if not 0 <= value <= self.max_marks:
+            raise ValidationError(
+                f"Marks must be from 0 to {self.max_marks}, got {value}.")
+        self._marks = value
 
     def is_late(self, assignment: Assignment) -> bool:
         """Check whether this was handed in after the deadline.
@@ -144,7 +255,7 @@ class Submission:
             True if submitted_at > assignment.deadline.
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 6")
+        return self.submitted_at > assignment.deadline
 
     def to_dict(self) -> dict:
         """The submission as one CSV row.
@@ -153,7 +264,12 @@ class Submission:
             dict with the columns of submissions.csv (blank marks if None).
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 6")
+        return {"student_id": self.student_id,
+                "assignment_id": self.assignment_id,
+                "submitted_at": format_datetime(self.submitted_at),
+                "text": self.text,
+                "marks": "" if self._marks is None else self._marks,
+                "feedback": self.feedback}
 
     @classmethod
     def from_dict(cls, row: dict, max_marks: int) -> "Submission":
@@ -168,7 +284,17 @@ class Submission:
             ValidationError: bad date, bad marks or missing column.
         Complexity: O(1).
         """
-        raise NotImplementedError("Part 6")
+        if not isinstance(row, dict):
+            raise ValidationError("Each submission must be a dict of columns.")
+        submitted_at = require_text(row.get("submitted_at"), "submitted_at")
+        submission = cls(row.get("student_id"), row.get("assignment_id"),
+                         parse_datetime(submitted_at), row.get("text"),
+                         max_marks)
+        marks = row.get("marks")
+        if marks is not None and str(marks).strip():
+            submission.marks = marks          # goes through the checked setter
+        submission.feedback = (row.get("feedback") or "").strip()
+        return submission
 
 
 def submit_work(submissions: dict, assignment: Assignment, student_id: str,
@@ -188,7 +314,14 @@ def submit_work(submissions: dict, assignment: Assignment, student_id: str,
         ValidationError: if text is empty.
     Complexity: O(1).
     """
-    raise NotImplementedError("Part 6")
+    submission = Submission(student_id, assignment.assignment_id, now, text,
+                            assignment.max_marks)
+    if submission.key in submissions:
+        raise DuplicateError(
+            f"{submission.student_id} has already submitted "
+            f"{assignment.assignment_id}.")
+    submissions[submission.key] = submission
+    return submission
 
 
 def pending_for_student(assignments: dict, submissions: dict,
@@ -204,4 +337,7 @@ def pending_for_student(assignments: dict, submissions: dict,
         list of Assignment, earliest deadline first.
     Complexity: O(a log a) for a assignments.
     """
-    raise NotImplementedError("Part 6")
+    pending = [assignment for assignment in assignments.values()
+               if assignment.course_id in course_ids
+               and (student_id, assignment.assignment_id) not in submissions]
+    return sorted(pending, key=lambda assignment: assignment.deadline)

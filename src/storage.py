@@ -12,10 +12,8 @@ Where the data lives
   so a crash half-way never leaves a broken file.
 
 Key data structure: DataStore keeps one dict per record type,
-{id: object}, so every lookup by ID is O(1).
-
-Assignments and submissions are kept as plain dicts (the JSON/CSV records)
-until Part 6 adds the Assignment and Submission classes.
+{id: object}, so every lookup by ID is O(1). Submissions are keyed by the
+tuple (student_id, assignment_id) (Part 6).
 """
 
 from __future__ import annotations
@@ -26,6 +24,7 @@ import json
 import os
 from pathlib import Path
 
+from assignments import SUBMISSION_FIELDS, Assignment, Submission
 from courses import COURSE_FIELDS, MATERIAL_FIELDS, Course, Material
 from exceptions import DataFileError, DuplicateError, ValidationError
 from quizzes import Quiz
@@ -45,10 +44,8 @@ ATTEMPTS_FILE = "attempts.json"
 ASSIGNMENTS_FILE = "assignments.json"
 SUBMISSIONS_FILE = "submissions.csv"
 
-# Column order of the CSV files that no other module owns.
+# Column order of the CSV file that no other module owns.
 ENROLLMENT_FIELDS = ("student_id", "course_id")
-SUBMISSION_FIELDS = ("student_id", "assignment_id", "submitted_at", "text",
-                     "marks", "feedback")
 
 
 def load_json(path):
@@ -225,9 +222,9 @@ class DataStore:
     Attributes:
         users (dict[str, User]), courses (dict[str, Course]),
         quizzes (dict[str, Quiz]),
-        assignments (dict[str, dict])  -> plain records until Part 6,
-        submissions (dict[tuple[str, str], dict]) -> key (student_id,
-            assignment_id); plain rows until Part 6,
+        assignments (dict[str, Assignment]),
+        submissions (dict[tuple[str, str], Submission]) -> key
+            (student_id, assignment_id), one submission per pair,
         attempts (list[dict])  -> kept in the order they happened.
     """
 
@@ -239,8 +236,8 @@ class DataStore:
         self.users: dict = {}          # "S01" -> Student, "T01" -> Teacher ...
         self.courses: dict = {}        # "C101" -> Course
         self.quizzes: dict = {}        # "Q01" -> Quiz
-        self.assignments: dict = {}    # "AS01" -> assignment record
-        self.submissions: dict = {}    # ("S01", "AS01") -> submission row
+        self.assignments: dict = {}    # "AS01" -> Assignment
+        self.submissions: dict = {}    # ("S01", "AS01") -> Submission
         self.attempts: list = []       # quiz attempts, oldest first
 
     def load(self, folder=None) -> None:
@@ -361,7 +358,7 @@ class DataStore:
         self.attempts = list(records)
 
     def _load_assignments(self, folder: Path) -> None:
-        """Read assignments.json into self.assignments (plain records).
+        """Read assignments.json into self.assignments as Assignment objects.
 
         Args:
             folder: data folder.
@@ -370,9 +367,10 @@ class DataStore:
         records = _records(load_json(folder / ASSIGNMENTS_FILE),
                            ASSIGNMENTS_FILE)
         for record in records:
-            self._need(self.courses, record.get("course_id"), "course")
-            _add_unique(self.assignments, record.get("assignment_id"),
-                        record, "assignment")
+            assignment = Assignment.from_dict(record)
+            self._need(self.courses, assignment.course_id, "course")
+            _add_unique(self.assignments, assignment.assignment_id,
+                        assignment, "assignment")
 
     def _load_submissions(self, folder: Path) -> None:
         """Read submissions.csv into self.submissions, keyed by a tuple.
@@ -382,10 +380,12 @@ class DataStore:
         Complexity: O(s) for s submissions.
         """
         for row in load_csv(folder / SUBMISSIONS_FILE):
-            key = (row.get("student_id"), row.get("assignment_id"))
-            self._need(self.users, key[0], "student")
-            self._need(self.assignments, key[1], "assignment")
-            _add_unique(self.submissions, key, row, "submission")
+            self._need(self.users, row.get("student_id"), "student")
+            assignment = self._need(self.assignments,
+                                    row.get("assignment_id"), "assignment")
+            submission = Submission.from_dict(row, assignment.max_marks)
+            _add_unique(self.submissions, submission.key, submission,
+                        "submission")
 
     def save(self, folder=None) -> None:
         """Write every record back to the data files.
