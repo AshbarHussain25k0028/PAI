@@ -82,6 +82,8 @@ other by plain name (for example `from users import Student`).
 | `Quiz.from_dict` | record | a new Quiz with its questions. | O(n^2) worst case for n questions (duplicate check per add; n is small) | Muhammad Mudassir | 4 |
 | `weak_topics` | topic_results, threshold | list of topic names, lowest ratio first. | O(t log t) for t topics | Muhammad Mudassir | 7 |
 | `suggest_revision` | topic_results, course, threshold | [(topic, [Material, ...]), ...], weakest topic first. | O(t log t + t*m) for t topics and m materials | Muhammad Mudassir | 7 |
+| `_check_threshold` (helper) | threshold | the threshold as a float; ValidationError if not a number from 0 to 1. | O(1) | Muhammad Mudassir | 7 |
+| `merge_topic_results` (helper) | results | one {topic: (correct, total)} dict with the sums per topic. | O(r * t) for r dicts of t topics | Muhammad Mudassir | 7 |
 
 ## `storage.py` (owner: Ashbar Hussain, Part 5)
 
@@ -121,7 +123,16 @@ other by plain name (for example `from users import Student`).
 | Function | Inputs | Output | Big-O | Owner | Part |
 |---|---|---|---|---|---|
 | `show_banner` | – | None | O(1) | Ashbar Hussain | 1 |
-| `run` | – | None | O(1) | Ashbar Hussain (Part 1), Muhammad Mudassir (Part 7) | 1, 7 |
+| `run` | – | None (loads data, then login and menu loop until Q or end of input) | O(N) to load, then O(1) per choice | Ashbar Hussain (Part 1), Muhammad Mudassir (Part 7) | 1, 7 |
+| `login` (helper) | store | the logged-in User, or None if Q was typed. | O(1) per attempt | Muhammad Mudassir | 7 |
+| `menu_loop` (helper) | store, user | None; runs `MENU_ACTIONS[line]` for the line chosen from `user.menu_options()` (polymorphism) | O(1) per choice | Muhammad Mudassir | 7 |
+| `courses_for` (helper) | store, user | list of Course objects (enrolled, taught, or all for admin). | O(c) for c courses | Muhammad Mudassir | 7 |
+| `choose_from` (helper) | title, items, label | the chosen item, or None for Back / empty list. | O(n) for n items | Muhammad Mudassir | 7 |
+| `read_note` (helper) | file_name | text of a note in data/raw/notes; DataFileError if missing. | O(k) for k characters | Muhammad Mudassir | 7 |
+| `latest_attempts` (helper) | store, student_id | {quiz_id: attempt}, newest attempt wins. | O(a) for a attempts | Muhammad Mudassir | 7 |
+| `topic_results_for` (helper) | store, student_id, course_id | merged {topic: (correct, total)} over the latest attempts. | O(a + q * n) | Muhammad Mudassir | 7 |
+| `show_courses`, `take_quiz`, `show_progress`, `show_quiz_results` (menu handlers) | store, user | None (print to the console) | see docstrings | Muhammad Mudassir | 7 |
+| `ask_answers`, `record_attempt`, `quiz_result_row`, `print_suggestions`, `print_topic_table`, `print_class_topics`, `coming_later` (helpers) | see docstrings | see docstrings | O(n) or better | Muhammad Mudassir | 7 |
 
 ## `question_api.py` (owner: Muhammad Mudassir, Part 9)
 

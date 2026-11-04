@@ -10,7 +10,10 @@ Key data structures
 - Quiz.questions : list[Question], kept in the order students see them.
 - topic results  : dict {topic: (correct, total)}, built while grading.
 
-weak_topics() and suggest_revision() are still stubs: they are written in Part 7.
+Revision suggestions (Part 7) are rule-based: a topic is "weak" when the share
+of right answers is below a threshold (60% by default). Weak topics are ranked
+with sorted(key=lambda ...), weakest first, and each one is matched with the
+course materials on that topic.
 """
 
 from __future__ import annotations
@@ -204,10 +207,53 @@ class Quiz:
         return quiz
 
 
+def _check_threshold(threshold) -> float:
+    """Check that a threshold is a number from 0 to 1.
+
+    Helper added in Part 7, used by weak_topics().
+
+    Args:
+        threshold: the value to check, e.g. 0.6.
+    Returns:
+        the threshold as a float.
+    Raises:
+        ValidationError: if it is not a number or is outside 0-1.
+    Complexity: O(1).
+    """
+    if isinstance(threshold, bool) or not isinstance(threshold, (int, float)):
+        raise ValidationError("The threshold must be a number from 0 to 1.")
+    if not 0 <= threshold <= 1:
+        raise ValidationError(
+            f"The threshold must be between 0 and 1, got {threshold}.")
+    return float(threshold)
+
+
+def merge_topic_results(results: list[dict]) -> dict:
+    """Add up several {topic: (correct, total)} dicts into one.
+
+    Helper added in Part 7: a student's progress covers several quizzes, and a
+    teacher's class view covers several students.
+
+    Args:
+        results: list of topic_results dicts from Quiz.grade_attempt.
+    Returns:
+        one dict {topic: (correct, total)} with the sums per topic.
+    Complexity: O(r * t) for r dicts of t topics.
+    """
+    merged: dict[str, tuple[int, int]] = {}   # topic -> (correct, total)
+    for topic_results in results:
+        for topic, (correct, total) in topic_results.items():
+            old_correct, old_total = merged.get(topic, (0, 0))
+            merged[topic] = (old_correct + correct, old_total + total)
+    return merged
+
+
 def weak_topics(topic_results: dict, threshold: float = 0.6) -> list[str]:
     """Topics where correct/total is below threshold, weakest first.
 
-    Uses sorted(..., key=lambda item: ratio) (Lab 04 requirement).
+    Uses sorted(..., key=lambda item: ratio) (Lab 04 requirement). Topics with
+    the same ratio are listed in alphabetical order, so the result is always
+    the same. Topics with no questions (total 0) are skipped.
 
     Args:
         topic_results: {topic: (correct, total)} from Quiz.grade_attempt.
@@ -215,14 +261,27 @@ def weak_topics(topic_results: dict, threshold: float = 0.6) -> list[str]:
     Returns:
         list of topic names, lowest ratio first.
     Raises:
-        ValidationError: if threshold is not between 0 and 1.
+        ValidationError: if threshold is not between 0 and 1, or
+        topic_results is not a dict.
     Complexity: O(t log t) for t topics.
     """
-    raise NotImplementedError("Part 7")
+    threshold = _check_threshold(threshold)
+    if not isinstance(topic_results, dict):
+        raise ValidationError("topic_results must be a dict.")
+    # (topic, ratio) pairs, only for topics that had at least one question.
+    ratios = [(topic, correct / total)
+              for topic, (correct, total) in topic_results.items() if total > 0]
+    weak = [pair for pair in ratios if pair[1] < threshold]
+    ranked = sorted(weak, key=lambda pair: (pair[1], pair[0]))
+    return [topic for topic, _ in ranked]
 
 
 def suggest_revision(topic_results: dict, course, threshold: float = 0.6) -> list[tuple]:
     """Rule-based revision tips: for each weak topic, the course notes on it.
+
+    Rule: if a topic's score is below the threshold, suggest every material of
+    the course with the same topic tag. A weak topic with no notes is still
+    listed (with an empty list), so the student knows to ask the teacher.
 
     Args:
         topic_results: from Quiz.grade_attempt.
@@ -234,4 +293,5 @@ def suggest_revision(topic_results: dict, course, threshold: float = 0.6) -> lis
         ValidationError: if threshold is not between 0 and 1.
     Complexity: O(t log t + t*m) for t topics and m materials.
     """
-    raise NotImplementedError("Part 7")
+    return [(topic, course.materials_for_topic(topic))
+            for topic in weak_topics(topic_results, threshold)]
