@@ -6,7 +6,7 @@ Notes in one chat, deadlines in another, and the assignment somehow missing? ALP
 
 ALPHA LMS is a proposed **Python console application** for a small school or college class. Teachers will organize learning activities, students will track their work, and revision suggestions will point them toward topics worth another look.
 
-> **Project status: proposal and planning.** Application implementation has not started. The features below describe the intended scope; they are not completed features or measured results.
+> **Project status: half-project release (v0.5).** The console app runs: login for three roles, courses and notes, quizzes with topic results and revision tips, assignments with submission and marking, account and enrollment management, and saving to local files. The analysis, charts, question API and AI parts listed below are still planned.
 
 ## What we plan to build
 
@@ -68,13 +68,60 @@ Dependency versions and the final module structure will be documented when imple
 
 ## Getting started
 
-This repository currently contains the project overview, contribution guidance, and development roadmap. **There is no runnable application yet.**
+You need **Python 3.11** (3.10 or newer should also work) and a terminal. All commands are run from the repository folder.
 
-Installation commands, a dependency file, demonstration accounts, safe example data, and the actual entry point will be added with the first working version. Until then, start with:
+**1. Get the code**
 
-- [Development roadmap](ROADMAP.md)
-- [Contributing guide](CONTRIBUTING.md)
-- [Questions and suggestions](https://github.com/AshbarHussain25k0028/PAI/issues)
+```bash
+git clone https://github.com/AshbarHussain25k0028/PAI.git
+cd PAI
+```
+
+**2. Create a virtual environment and install the libraries**
+
+macOS / Linux:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+Windows (PowerShell):
+
+```powershell
+py -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+**3. Run the app**
+
+```bash
+python src/main.py
+```
+
+Log in by typing a user ID. The sample data is fictional:
+
+| User ID | Role | What to try |
+| --- | --- | --- |
+| `S01` – `S08` | Student | My courses and materials, Take a quiz, My assignments (see marks, submit), My progress and revision tips |
+| `T01`, `T02` | Teacher | My courses and materials, Quiz results, Mark submissions |
+| `A01` | Admin | List accounts, Create an account, Enroll a student, Save data |
+
+Choose a menu line by its number. "Log out" returns to the login prompt; type `Q` there to quit.
+
+**4. Where the data is saved**
+
+The first run reads the sample data from `data/raw/`. Every change (new accounts, enrollments, quiz attempts, submissions, marks) is saved to `data/processed/` when you quit, or straight away with the admin's "Save data". Later runs read `data/processed/`. To start again from the sample data, delete the files in `data/processed/` (keep `.gitkeep`).
+
+**5. Run the tests**
+
+```bash
+python -m pytest -q
+```
+
+More detail: [module interfaces](docs/INTERFACES.md) · [proposal](docs/proposal.md) · [roadmap](ROADMAP.md) · [contributing guide](CONTRIBUTING.md)
 
 ## Data and responsible use
 

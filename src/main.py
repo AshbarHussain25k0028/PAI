@@ -15,21 +15,24 @@ return their own menu lines. This is polymorphism.
 Key data structure: MENU_ACTIONS is a dict {menu line: handler function}, so
 finding what to run for a choice is O(1).
 
-Student and teacher flows cover courses, materials and quizzes. Assignments,
-the admin menu and saving on exit come in Part 8; the class report in Part 11.
-Quiz attempts made in this session are kept in memory until Part 8 adds
-saving.
+Student and teacher flows cover courses, materials and quizzes (Part 7).
+Part 8 adds the assignment items (students submit, teachers mark), the admin
+menu (list and create accounts, enroll students, save) and saving on exit:
+every change made in a session is written to data/processed/ when the
+program ends. The class report comes in Part 11.
 """
 
 from __future__ import annotations
 
 from datetime import datetime
 
+from admin import accounts_by_role, create_account, enroll_student, students_not_in
+from assignments import submit_work
 from exceptions import DataFileError, LMSError
 from quizzes import merge_topic_results, suggest_revision, weak_topics
-from storage import RAW_DIR, DataStore
+from storage import PROCESSED_DIR, RAW_DIR, DataStore
 from users import find_user
-from utils import ask_choice, ask_text, format_datetime, make_id
+from utils import ask_choice, ask_int, ask_text, format_datetime, make_id
 
 BANNER = "ALPHA LMS - Learning Management System"
 NOTES_DIR = RAW_DIR / "notes"      # teacher notes, one .txt per material
@@ -330,6 +333,200 @@ def print_class_topics(class_results: dict) -> None:
     print("Topics to re-teach: " + (", ".join(weak) if weak else "none"))
 
 
+# ------------------------------------------------- assignments (Part 8)
+
+def assignment_status(assignment, submission) -> str:
+    """Describe where a student is with one assignment.
+
+    Args:
+        assignment: the Assignment.
+        submission: their Submission, or None if they have not submitted.
+    Returns:
+        text such as "marked 9/10" or "not submitted (deadline passed)".
+    Complexity: O(1).
+    """
+    if submission is None:
+        if assignment.is_open(datetime.now()):
+            return "not submitted"
+        return "not submitted (deadline passed)"
+    late = " (late)" if submission.is_late(assignment) else ""
+    if submission.marks is None:
+        return f"submitted{late}, waiting for marks"
+    return f"marked {submission.marks}/{assignment.max_marks}{late}"
+
+
+def show_my_assignments(store: DataStore, user) -> None:
+    """Student flow: status of every assignment, then submit a pending one.
+
+    Args:
+        store: the loaded DataStore.
+        user: the logged-in Student.
+    Complexity: O(a log a) for a assignments.
+    """
+    course_ids = {course.course_id for course in courses_for(store, user)}
+    mine = sorted((a for a in store.assignments.values()
+                   if a.course_id in course_ids), key=lambda a: a.deadline)
+    if not mine:
+        print("You have no assignments.")
+        return
+    print("\nYour assignments")
+    for assignment in mine:
+        submission = store.submissions.get((user.user_id, assignment.assignment_id))
+        print(f"  {assignment.assignment_id} {assignment.title} "
+              f"(due {format_datetime(assignment.deadline)}): "
+              f"{assignment_status(assignment, submission)}")
+        if submission is not None and submission.feedback:
+            print(f"      feedback: {submission.feedback}")
+    submit_pending(store, user, course_ids)
+
+
+def submit_pending(store: DataStore, user, course_ids: set) -> None:
+    """Let a student hand in one assignment they have not submitted yet.
+
+    Args:
+        store: the loaded DataStore.
+        user: the logged-in Student.
+        course_ids: the student's course IDs.
+    Complexity: O(a log a) for a assignments.
+    """
+    pending = [a for a in store.assignments.values()
+               if a.course_id in course_ids
+               and (user.user_id, a.assignment_id) not in store.submissions]
+    assignment = choose_from("Submit an assignment",
+                             sorted(pending, key=lambda a: a.deadline),
+                             lambda a: f"{a.assignment_id} {a.title}")
+    if assignment is None:
+        return
+    text = ask_text("Type your answer (one line): ")
+    submission = submit_work(store.submissions, assignment, user.user_id,
+                             text, datetime.now())
+    print("Submitted." + (" Note: this is after the deadline, so it is marked late."
+                          if submission.is_late(assignment) else ""))
+
+
+def mark_submissions(store: DataStore, user) -> None:
+    """Teacher flow: choose an assignment, then mark one submission.
+
+    Args:
+        store: the loaded DataStore.
+        user: the logged-in Teacher.
+    Complexity: O(a + s log s) for a assignments and s submissions.
+    """
+    course_ids = {course.course_id for course in courses_for(store, user)}
+    assignment = choose_from(
+        "Mark submissions",
+        [a for a in store.assignments.values() if a.course_id in course_ids],
+        lambda a: f"{a.assignment_id} {a.title} (out of {a.max_marks})")
+    if assignment is None:
+        return
+    submissions = sorted(
+        (s for s in store.submissions.values()
+         if s.assignment_id == assignment.assignment_id
+         and user.can_view_student(s.student_id, store.courses)),
+        key=lambda s: s.student_id)
+    submission = choose_from(f"Submissions for {assignment.assignment_id}",
+                             submissions,
+                             lambda s: f"{s.student_id} {store.users[s.student_id].name}: "
+                                       f"{assignment_status(assignment, s)}")
+    if submission is not None:
+        enter_marks(assignment, submission)
+
+
+def enter_marks(assignment, submission) -> None:
+    """Show a submission and ask the teacher for marks and feedback.
+
+    The marks go through the Submission.marks property, which only accepts
+    0..max_marks (ask_int already keeps the number in that range).
+
+    Args:
+        assignment: the Assignment.
+        submission: the Submission being marked.
+    Complexity: O(1).
+    """
+    print(f"\nAnswer from {submission.student_id}: {submission.text}")
+    submission.marks = ask_int(f"Marks (0-{assignment.max_marks}): ",
+                               0, assignment.max_marks)
+    feedback = ask_text("Feedback (Enter to keep the old one): ", allow_empty=True)
+    if feedback:
+        submission.feedback = feedback
+    print(f"Saved: {submission.marks}/{assignment.max_marks}.")
+
+
+# --------------------------------------------------- admin menu (Part 8)
+
+def list_accounts(store: DataStore, user) -> None:
+    """Admin flow: print every account, with each student's courses.
+
+    Args:
+        store: the loaded DataStore.
+        user: the logged-in Admin.
+    Complexity: O(u log u + u * c) for u users and c courses.
+    """
+    print("\nAccounts")
+    for account in accounts_by_role(store.users):
+        line = f"  {account.describe()}"
+        if account.role == "student":
+            ids = [c.course_id for c in store.courses_for_student(account.user_id)]
+            line += f"  courses: {', '.join(ids) or 'none'}"
+        print(line)
+
+
+def create_account_menu(store: DataStore, user) -> None:
+    """Admin flow: ask for a role and a name, then make the account.
+
+    Args:
+        store: the loaded DataStore.
+        user: the logged-in Admin.
+    Complexity: O(u) for u users.
+    """
+    roles = ["student", "teacher", "admin"]
+    role = roles[ask_choice("Role of the new account", roles) - 1]
+    name = ask_text("Full name: ")
+    account = create_account(store.users, role, name)
+    print(f"Created {account.describe()}. They log in with {account.user_id}.")
+
+
+def enroll_student_menu(store: DataStore, user) -> None:
+    """Admin flow: choose a course, then a student who is not in it yet.
+
+    Args:
+        store: the loaded DataStore.
+        user: the logged-in Admin.
+    Complexity: O(c + u log u) for c courses and u users.
+    """
+    course = choose_from("Enroll into which course?", list(store.courses.values()),
+                         lambda c: f"{c.course_id} {c.title} ({len(c.enrolled)} students)")
+    if course is None:
+        return
+    student = choose_from(f"Students not in {course.course_id}",
+                          students_not_in(store.users, course),
+                          lambda s: f"{s.user_id} {s.name}")
+    if student is None:
+        return
+    enroll_student(store.users, store.courses, student.user_id, course.course_id)
+    print(f"{student.name} is now enrolled in {course.course_id}.")
+
+
+def save_data(store: DataStore, user=None) -> bool:
+    """Write every record to data/processed/ (menu item and exit step).
+
+    Args:
+        store: the loaded DataStore.
+        user: the logged-in user (not needed; kept so every handler has
+            the same call).
+    Returns:
+        True if saved, False if a file could not be written.
+    Complexity: O(N) for N records.
+    """
+    try:
+        store.save()
+    except DataFileError as error:
+        print(f"Could not save the data: {error}")
+        return False
+    print(f"Data saved to {PROCESSED_DIR.parent.name}/{PROCESSED_DIR.name}/.")
+    return True
+
+
 def coming_later(part: str):
     """Make a handler for a menu line that a later part will build.
 
@@ -346,15 +543,15 @@ def coming_later(part: str):
 MENU_ACTIONS = {
     "My courses and materials": show_courses,
     "Take a quiz": take_quiz,
-    "My assignments": coming_later("Part 8"),
+    "My assignments": show_my_assignments,
     "My progress and revision tips": show_progress,
     "Quiz results": show_quiz_results,
-    "Mark submissions": coming_later("Part 8"),
+    "Mark submissions": mark_submissions,
     "Class report": coming_later("Part 11"),
-    "List accounts": coming_later("Part 8"),
-    "Create an account": coming_later("Part 8"),
-    "Enroll a student": coming_later("Part 8"),
-    "Save data": coming_later("Part 8"),
+    "List accounts": list_accounts,
+    "Create an account": create_account_menu,
+    "Enroll a student": enroll_student_menu,
+    "Save data": save_data,
 }
 
 
@@ -407,6 +604,7 @@ def run() -> None:
     """Start the program: load the data, then log users in one after another.
 
     Typing Q at login, or reaching the end of the input (Ctrl+D), quits.
+    Either way the data is saved before the program ends (Part 8).
 
     Complexity: O(N) to load N records, then O(1) per menu choice.
     """
@@ -424,6 +622,7 @@ def run() -> None:
             user = login(store)
     except (EOFError, KeyboardInterrupt):
         print()
+    save_data(store)
     print("Thank you for using ALPHA LMS.")
 
 

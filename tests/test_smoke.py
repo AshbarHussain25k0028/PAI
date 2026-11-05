@@ -10,7 +10,7 @@ import pytest
 MODULES = [
     "exceptions", "utils", "courses", "users", "quizzes", "assignments",
     "storage", "main", "question_api", "scores", "analysis", "charts",
-    "text_features", "topic_model",
+    "text_features", "topic_model", "admin",
 ]
 
 

@@ -1,6 +1,6 @@
 # ALPHA LMS Roadmap
 
-This roadmap describes intended work. Only repository documentation is in place; application features and AI experiments have not been implemented or tested.
+This roadmap describes intended work. The core console LMS (section 2) is in place as the half-project release v0.5; analysis, charts and AI experiments are still planned.
 
 ## 1. Define the project
 
@@ -11,14 +11,14 @@ This roadmap describes intended work. Only repository documentation is in place;
 
 ## 2. Build the core LMS
 
-- [ ] Define stable IDs and account, course, assignment, quiz, and submission records.
-- [ ] Create student, teacher, and administrator console workflows.
-- [ ] Check role permissions and course enrollment.
-- [ ] Organize course materials and local file references.
-- [ ] Create assignments, deadlines, submission records, marks, and feedback.
+- [x] Define stable IDs and account, course, assignment, quiz, and submission records.
+- [x] Create student, teacher, and administrator console workflows.
+- [x] Check role permissions and course enrollment.
+- [x] Organize course materials and local file references.
+- [x] Create assignments, deadlines, submission records, marks, and feedback.
 - [ ] Implement teacher-approved multiple-choice quizzes and attempts.
-- [ ] Preserve records in TXT/CSV/JSON and recover from invalid input or file failures.
-- [ ] Add safe fictional demonstration data and verified setup instructions.
+- [x] Preserve records in TXT/CSV/JSON and recover from invalid input or file failures.
+- [x] Add safe fictional demonstration data and verified setup instructions.
 
 ## 3. Add analysis and revision suggestions
 
@@ -26,7 +26,7 @@ This roadmap describes intended work. Only repository documentation is in place;
 - [ ] Use NumPy for numerical summaries and vectorized calculations.
 - [ ] Create line, bar, scatter, and histogram views with Matplotlib and Seaborn.
 - [ ] Distinguish missing work from earned marks in progress summaries.
-- [ ] Match missed quiz topics to relevant notes using transparent rules.
+- [x] Match missed quiz topics to relevant notes using transparent rules.
 - [ ] Consider an optional public question-bank API for teacher-reviewed supplementary practice, with a local fallback.
 
 ## 4. Try later-course concepts as they are studied

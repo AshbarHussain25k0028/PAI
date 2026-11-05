@@ -133,6 +133,19 @@ other by plain name (for example `from users import Student`).
 | `topic_results_for` (helper) | store, student_id, course_id | merged {topic: (correct, total)} over the latest attempts. | O(a + q * n) | Muhammad Mudassir | 7 |
 | `show_courses`, `take_quiz`, `show_progress`, `show_quiz_results` (menu handlers) | store, user | None (print to the console) | see docstrings | Muhammad Mudassir | 7 |
 | `ask_answers`, `record_attempt`, `quiz_result_row`, `print_suggestions`, `print_topic_table`, `print_class_topics`, `coming_later` (helpers) | see docstrings | see docstrings | O(n) or better | Muhammad Mudassir | 7 |
+| `show_my_assignments`, `mark_submissions` (menu handlers) | store, user | None; a student sees each assignment's status and submits one, a teacher marks one submission of a course they teach | O(a log a) / O(a + s log s) | Ashbar Hussain | 8 |
+| `assignment_status`, `submit_pending`, `enter_marks` (helpers) | see docstrings | status text / None | O(1) to O(a log a) | Ashbar Hussain | 8 |
+| `list_accounts`, `create_account_menu`, `enroll_student_menu` (admin handlers) | store, user | None (print and change the store in memory) | O(u log u + u * c) or better | Ashbar Hussain | 8 |
+| `save_data` (handler + exit step) | store, user=None | True if saved to data/processed, False if a file could not be written | O(N) for N records | Ashbar Hussain | 8 |
+
+## `admin.py` (owner: Ashbar Hussain, Part 8)
+
+| Function | Inputs | Output | Big-O | Owner | Part |
+|---|---|---|---|---|---|
+| `create_account` | users, role, name | the new Student/Teacher/Admin with the next free ID (S09, T03, A02 ...); ValidationError for an unknown role or empty name | O(u) for u users | Ashbar Hussain | 8 |
+| `enroll_student` | users, courses, student_id, course_id | None; NotFoundError (no user/course), ValidationError (not a student), DuplicateError (already enrolled) | O(1) | Ashbar Hussain | 8 |
+| `accounts_by_role` | users | list of User: admins, teachers, students, each by ID | O(u log u) | Ashbar Hussain | 8 |
+| `students_not_in` | users, course | list of Student not yet in the course, by ID | O(u log u) | Ashbar Hussain | 8 |
 
 ## `question_api.py` (owner: Muhammad Mudassir, Part 9)
 
