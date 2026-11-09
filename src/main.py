@@ -20,6 +20,8 @@ Part 8 adds the assignment items (students submit, teachers mark), the admin
 menu (list and create accounts, enroll students, save) and saving on exit:
 every change made in a session is written to data/processed/ when the
 program ends. The class report comes in Part 11.
+Part 9 adds "Practice questions" for students: extra multiple-choice
+questions from Open Trivia DB, or from the saved cache when offline.
 """
 
 from __future__ import annotations
@@ -29,7 +31,8 @@ from datetime import datetime
 from admin import accounts_by_role, create_account, enroll_student, students_not_in
 from assignments import submit_work
 from exceptions import DataFileError, LMSError
-from quizzes import merge_topic_results, suggest_revision, weak_topics
+from question_api import CATEGORIES, practice_set
+from quizzes import Quiz, merge_topic_results, suggest_revision, weak_topics
 from storage import PROCESSED_DIR, RAW_DIR, DataStore
 from users import find_user
 from utils import ask_choice, ask_int, ask_text, format_datetime, make_id
@@ -37,6 +40,7 @@ from utils import ask_choice, ask_int, ask_text, format_datetime, make_id
 BANNER = "ALPHA LMS - Learning Management System"
 NOTES_DIR = RAW_DIR / "notes"      # teacher notes, one .txt per material
 LOG_OUT = "Log out"
+PRACTICE_COUNT = 5                 # questions per practice round (Part 9)
 
 
 def show_banner() -> None:
@@ -251,6 +255,33 @@ def take_quiz(store: DataStore, user) -> None:
     print_topic_table(topic_results)
     print("Revision tips:")
     print_suggestions(suggest_revision(topic_results, store.courses[quiz.course_id]))
+
+
+def practice_questions(store: DataStore, user) -> None:
+    """Student flow: answer practice questions from Open Trivia DB.
+
+    Questions come live from the API, or from the saved cache when there is
+    no internet (Part 9). Practice scores are shown but not saved, because
+    they are not part of any course quiz.
+
+    Args:
+        store: the loaded DataStore (not needed; same call as other handlers).
+        user: the logged-in Student.
+    Complexity: O(q) for q cached questions in the chosen category.
+    """
+    names = list(CATEGORIES)
+    category = names[ask_choice("Practice category", names) - 1]
+    questions, source = practice_set(category, PRACTICE_COUNT)
+    print(f"\n{len(questions)} {category} questions ({source}).")
+    quiz = Quiz("PRACTICE", "OPENTDB", f"{category} practice")
+    for question in questions:
+        quiz.add_question(question)
+    answers = ask_answers(quiz)
+    score = quiz.grade_attempt(answers)[0]
+    print(f"\nPractice score: {score}/{quiz.max_score}.")
+    for question, answer in zip(quiz.questions, answers):
+        if answer != question.answer_index:
+            print(f"- {question.text}\n  Answer: {question.options[question.answer_index]}")
 
 
 def show_progress(store: DataStore, user) -> None:
@@ -543,6 +574,7 @@ def coming_later(part: str):
 MENU_ACTIONS = {
     "My courses and materials": show_courses,
     "Take a quiz": take_quiz,
+    "Practice questions": practice_questions,
     "My assignments": show_my_assignments,
     "My progress and revision tips": show_progress,
     "Quiz results": show_quiz_results,

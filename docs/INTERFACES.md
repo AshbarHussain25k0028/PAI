@@ -59,7 +59,7 @@ other by plain name (for example `from users import Student`).
 | `User.describe` | – | text such as "S01 - Ali Raza (student)". | O(1) | Ashbar Hussain | 3 |
 | `User.to_dict` | – | {"user_id", "name", "role"}. | O(1) | Ashbar Hussain | 3 |
 | `Student.role (property)` | – | "student". | O(1) | Ashbar Hussain | 3 |
-| `Student.menu_options` | – | list of menu lines (my courses, quizzes, assignments, progress). | O(1) | Ashbar Hussain | 3 |
+| `Student.menu_options` | – | list of menu lines (my courses, quizzes, practice, assignments, progress). | O(1) | Ashbar Hussain | 3, 9 |
 | `Student.can_view_student` | student_id, courses | True only if student_id is their own ID. | O(1) | Ashbar Hussain | 3 |
 | `Teacher.role (property)` | – | "teacher". | O(1) | Ashbar Hussain | 3 |
 | `Teacher.menu_options` | – | list of menu lines (materials, quizzes, marking, class report). | O(1) | Ashbar Hussain | 3 |
@@ -118,7 +118,7 @@ other by plain name (for example `from users import Student`).
 | `submit_work` | submissions, assignment, student_id, text, now | the new Submission (late ones are accepted and flagged by is_late). | O(1) | Ashbar Hussain | 6 |
 | `pending_for_student` | assignments, submissions, student_id, course_ids | list of Assignment, earliest deadline first. | O(a log a) for a assignments | Ashbar Hussain | 6 |
 
-## `main.py` (owner: Muhammad Mudassir / Ashbar Hussain, Part 1, 7, 8)
+## `main.py` (owner: Muhammad Mudassir / Ashbar Hussain, Part 1, 7, 8, 9)
 
 | Function | Inputs | Output | Big-O | Owner | Part |
 |---|---|---|---|---|---|
@@ -132,6 +132,7 @@ other by plain name (for example `from users import Student`).
 | `latest_attempts` (helper) | store, student_id | {quiz_id: attempt}, newest attempt wins. | O(a) for a attempts | Muhammad Mudassir | 7 |
 | `topic_results_for` (helper) | store, student_id, course_id | merged {topic: (correct, total)} over the latest attempts. | O(a + q * n) | Muhammad Mudassir | 7 |
 | `show_courses`, `take_quiz`, `show_progress`, `show_quiz_results` (menu handlers) | store, user | None (print to the console) | see docstrings | Muhammad Mudassir | 7 |
+| `practice_questions` (menu handler) | store, user | None; 5 Open Trivia DB questions (live, or from the cache offline), score and right answers shown, not saved | O(q) for q cached questions | Muhammad Mudassir | 9 |
 | `ask_answers`, `record_attempt`, `quiz_result_row`, `print_suggestions`, `print_topic_table`, `print_class_topics`, `coming_later` (helpers) | see docstrings | see docstrings | O(n) or better | Muhammad Mudassir | 7 |
 | `show_my_assignments`, `mark_submissions` (menu handlers) | store, user | None; a student sees each assignment's status and submits one, a teacher marks one submission of a course they teach | O(a log a) / O(a + s log s) | Ashbar Hussain | 8 |
 | `assignment_status`, `submit_pending`, `enter_marks` (helpers) | see docstrings | status text / None | O(1) to O(a log a) | Ashbar Hussain | 8 |
@@ -151,11 +152,14 @@ other by plain name (for example `from users import Student`).
 
 | Function | Inputs | Output | Big-O | Owner | Part |
 |---|---|---|---|---|---|
-| `fetch_questions` | category_id, amount | list of question dicts as sent by the API. | O(q) for q questions in the reply | Muhammad Mudassir | 9 |
+| `fetch_questions` | category_id, amount | list of question dicts as sent by the API; [] if the category has fewer than amount (response_code 1). | O(q) for q questions in the reply | Muhammad Mudassir | 9 |
 | `load_cache` | path | {category_name: [question dicts]}; empty dict if no cache yet. | O(q) for q cached questions | Muhammad Mudassir | 9 |
 | `save_cache` | cache, path | None | O(q) for q questions | Muhammad Mudassir | 9 |
 | `build_cache` | per_category | the updated cache dict. | O(k * q) for k categories and q questions each | Muhammad Mudassir | 9 |
 | `to_quiz_question` | api_question, question_id, topic | quizzes.Question with 4 shuffled options and the right answer_index. | O(1) | Muhammad Mudassir | 9 |
+| `merge_questions` (helper) | old, new | number added; new questions appended to old unless their text is already there (set of texts) | O(o + n) | Muhammad Mudassir | 9 |
+| `practice_set` (helper) | category_name, count, cache_path | (list of Question, "online" or "offline cache"); falls back to the cache when the API fails | O(q) for q cached questions | Muhammad Mudassir | 9 |
+| `_get_json`, `_wait_for_rate_limit`, `_fill_category` (private) | – | one GET with timeout + status check; 5 s gap after the last reply; fill one category until the target or no new questions | O(r) / O(1) / O(c·q) | Muhammad Mudassir | 9 |
 
 ## `scores.py` (owner: Muhammad Mudassir, Part 10)
 

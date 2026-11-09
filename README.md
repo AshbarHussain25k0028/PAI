@@ -105,7 +105,7 @@ Log in by typing a user ID. The sample data is fictional:
 
 | User ID | Role | What to try |
 | --- | --- | --- |
-| `S01` – `S08` | Student | My courses and materials, Take a quiz, My assignments (see marks, submit), My progress and revision tips |
+| `S01` – `S08` | Student | My courses and materials, Take a quiz, Practice questions (Open Trivia DB, works offline from the cache), My assignments (see marks, submit), My progress and revision tips |
 | `T01`, `T02` | Teacher | My courses and materials, Quiz results, Mark submissions |
 | `A01` | Admin | List accounts, Create an account, Enroll a student, Save data |
 
@@ -114,6 +114,12 @@ Choose a menu line by its number. "Log out" returns to the login prompt; type `Q
 **4. Where the data is saved**
 
 The first run reads the sample data from `data/raw/`. Every change (new accounts, enrollments, quiz attempts, submissions, marks) is saved to `data/processed/` when you quit, or straight away with the admin's "Save data". Later runs read `data/processed/`. To start again from the sample data, delete the files in `data/processed/` (keep `.gitkeep`).
+
+Practice questions come from the free [Open Trivia DB](https://opentdb.com) API (no key needed; questions are licensed CC BY-SA 4.0). A copy is saved in `data/raw/opentdb_cache.json`, so practice still works with no internet. To refresh the copy (it waits 5 seconds between calls, so it takes a few minutes):
+
+```bash
+python src/question_api.py
+```
 
 **5. Run the tests**
 

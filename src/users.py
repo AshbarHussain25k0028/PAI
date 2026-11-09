@@ -140,11 +140,13 @@ class Student(User):
         """Menu lines for a student.
 
         Returns:
-            list of menu lines (my courses, quizzes, assignments, progress).
+            list of menu lines (my courses, quizzes, practice, assignments,
+            progress).
         Complexity: O(1).
         """
         return ["My courses and materials", "Take a quiz",
-                "My assignments", "My progress and revision tips", "Log out"]
+                "Practice questions", "My assignments",
+                "My progress and revision tips", "Log out"]
 
     def can_view_student(self, student_id: str, courses: dict) -> bool:
         """A student may only see their own records.
