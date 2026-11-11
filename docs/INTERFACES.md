@@ -165,12 +165,13 @@ other by plain name (for example `from users import Student`).
 
 | Function | Inputs | Output | Big-O | Owner | Part |
 |---|---|---|---|---|---|
-| `score_matrix` | attempts, student_ids, quiz_ids | numpy array of shape (len(student_ids), len(quiz_ids)); NaN where a student has no attempt (the latest attempt wins if there are two). | O(a + s*q) for a attempts, s students, q quizzes | Muhammad Mudassir | 10 |
+| `score_matrix` | attempts, student_ids, quiz_ids | numpy array of shape (len(student_ids), len(quiz_ids)); NaN where a student has no attempt (the latest attempt wins if there are two). | O(a log a + s*q) for a attempts, s students, q quizzes (sort by date) | Muhammad Mudassir | 10 |
 | `to_percentages` | matrix, max_scores | (s, q) array: matrix / max_scores * 100 (NaN stays NaN). | O(s*q), vectorised | Muhammad Mudassir | 10 |
 | `missing_mask` | matrix | boolean (s, q) array, True where the value is NaN. | O(s*q), vectorised | Muhammad Mudassir | 10 |
 | `quiz_averages` | matrix | length-q array (np.nanmean along axis=0). | O(s*q), vectorised | Muhammad Mudassir | 10 |
 | `student_averages` | matrix | length-s array (np.nanmean along axis=1). | O(s*q), vectorised | Muhammad Mudassir | 10 |
 | `loop_vs_vector_demo` | size | (loop_seconds, vector_seconds). | O(size) | Muhammad Mudassir | 10 |
+| `print_course_table` | store, course | prints the course's percentage matrix with student and quiz averages (`python src/scores.py`). | O(a log a + s*q) | Muhammad Mudassir | 10 |
 
 ## `analysis.py` (owner: Ashbar Hussain, Part 11)
 
