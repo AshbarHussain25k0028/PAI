@@ -19,9 +19,10 @@ Student and teacher flows cover courses, materials and quizzes (Part 7).
 Part 8 adds the assignment items (students submit, teachers mark), the admin
 menu (list and create accounts, enroll students, save) and saving on exit:
 every change made in a session is written to data/processed/ when the
-program ends. The class report comes in Part 11.
+program ends.
 Part 9 adds "Practice questions" for students: extra multiple-choice
 questions from Open Trivia DB, or from the saved cache when offline.
+Part 11 adds the teacher's "Class report" (Pandas tables from analysis.py).
 """
 
 from __future__ import annotations
@@ -29,6 +30,7 @@ from __future__ import annotations
 from datetime import datetime
 
 from admin import accounts_by_role, create_account, enroll_student, students_not_in
+from analysis import print_class_report
 from assignments import submit_work
 from exceptions import DataFileError, LMSError
 from question_api import CATEGORIES, practice_set
@@ -483,6 +485,25 @@ def enter_marks(assignment, submission) -> None:
     print(f"Saved: {submission.marks}/{assignment.max_marks}.")
 
 
+# ------------------------------------------------- class report (Part 11)
+
+def show_class_report(store: DataStore, user) -> None:
+    """Teacher flow: choose one of your courses and print its class report.
+
+    Only the teacher's own courses are offered, so they only see their
+    own students.
+
+    Args:
+        store: the loaded DataStore.
+        user: the logged-in Teacher.
+    Complexity: O(c) to list courses, plus the report (see analysis.py).
+    """
+    course = choose_from("Class report for which course?", courses_for(store, user),
+                         lambda c: f"{c.course_id} {c.title} ({len(c.enrolled)} students)")
+    if course is not None:
+        print_class_report(store, course)
+
+
 # --------------------------------------------------- admin menu (Part 8)
 
 def list_accounts(store: DataStore, user) -> None:
@@ -579,7 +600,7 @@ MENU_ACTIONS = {
     "My progress and revision tips": show_progress,
     "Quiz results": show_quiz_results,
     "Mark submissions": mark_submissions,
-    "Class report": coming_later("Part 11"),
+    "Class report": show_class_report,
     "List accounts": list_accounts,
     "Create an account": create_account_menu,
     "Enroll a student": enroll_student_menu,

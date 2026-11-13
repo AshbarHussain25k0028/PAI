@@ -106,7 +106,7 @@ Log in by typing a user ID. The sample data is fictional:
 | User ID | Role | What to try |
 | --- | --- | --- |
 | `S01` – `S08` | Student | My courses and materials, Take a quiz, Practice questions (Open Trivia DB, works offline from the cache), My assignments (see marks, submit), My progress and revision tips |
-| `T01`, `T02` | Teacher | My courses and materials, Quiz results, Mark submissions |
+| `T01`, `T02` | Teacher | My courses and materials, Quiz results, Mark submissions, Class report (Pandas: averages by course and topic, one row per student, who needs attention) |
 | `A01` | Admin | List accounts, Create an account, Enroll a student, Save data |
 
 Choose a menu line by its number. "Log out" returns to the login prompt; type `Q` there to quit.

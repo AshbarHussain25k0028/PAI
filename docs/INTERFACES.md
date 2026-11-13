@@ -182,7 +182,11 @@ other by plain name (for example `from users import Student`).
 | `clean_frame` | frame | a new, cleaned DataFrame. | O(n) for n rows | Ashbar Hussain | 11 |
 | `course_summary` | progress | DataFrame indexed by course_id with mean_percent and attempts. | O(n) for n rows | Ashbar Hussain | 11 |
 | `topic_summary` | attempts, quizzes | DataFrame with course_id, topic, correct, total, percent. | O(a * k) for a attempts of k questions | Ashbar Hussain | 11 |
-| `class_report` | progress, submissions, course_id | DataFrame with student_id, quiz_avg, assignment_avg, missing_work. | O(n) for n rows (merge on student_id) | Ashbar Hussain | 11 |
+| `class_report` | progress, submissions, course_id, enrolled=None | DataFrame with student_id, quiz_avg, assignment_avg, missing_work (newest attempt per quiz; unmarked work is NaN, not 0; `enrolled` lists every enrolled student). | O(n log n) for n rows (merge on student_id) | Ashbar Hussain | 11 |
+| `latest_only` | progress | one row per (student_id, quiz_id), the newest attempt. | O(n log n) for n rows | Ashbar Hussain | 11 |
+| `needs_attention` | report, pass_mark=60 | rows below the pass mark or with missing work (filter), weakest first. | O(n log n) for n students | Ashbar Hussain | 11 |
+| `frames_from_store` | store | (progress, submissions) cleaned DataFrames. | O(a + s) | Ashbar Hussain | 11 |
+| `print_class_report` | store, course | prints course summary, topic table, per-student report and who needs attention (teacher "Class report", `python src/analysis.py`). | O(a*k + s + n log n) | Ashbar Hussain | 11 |
 
 ## `text_features.py` (owner: Muhammad Mudassir, Part 12)
 
