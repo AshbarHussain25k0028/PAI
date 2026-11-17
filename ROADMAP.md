@@ -24,7 +24,7 @@ This roadmap describes intended work. The core console LMS (section 2) is in pla
 
 - [x] Clean and combine records using Pandas.
 - [ ] Use NumPy for numerical summaries and vectorized calculations.
-- [ ] Create line, bar, scatter, and histogram views with Matplotlib and Seaborn.
+- [x] Create line, bar, scatter, and histogram views with Matplotlib and Seaborn.
 - [x] Distinguish missing work from earned marks in progress summaries.
 - [x] Match missed quiz topics to relevant notes using transparent rules.
 - [ ] Consider an optional public question-bank API for teacher-reviewed supplementary practice, with a local fallback.

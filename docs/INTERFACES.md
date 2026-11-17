@@ -206,6 +206,7 @@ other by plain name (for example `from users import Student`).
 | `completion_bar` | submissions, students_per_course, path | the Path of the saved PNG. | O(n) for n rows | Ashbar Hussain | 13 |
 | `score_histogram` | percentages, path | the Path of the saved PNG. | O(n) for n values | Ashbar Hussain | 13 |
 | `topic_heatmap` | topic_table, path | the Path of the saved PNG. | O(c*t) for c courses and t topics | Ashbar Hussain | 13 |
+| `make_all_charts` | store, folder | list of the four saved Paths. | O(a*k + s) | Ashbar Hussain | 13 |
 
 ## `topic_model.py` (owner: Muhammad Mudassir, Part 14)
 
