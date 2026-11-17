@@ -30,13 +30,13 @@ We want the AI features to solve specific learning problems, rather than simply 
 | Feature | Proposed approach | Development stage |
 | --- | --- | --- |
 | Revision suggestions | Match missed quiz topics to relevant notes and practice. This is a rule-based recommendation method and needs no model training. | Planned core feature |
-| Smart notes search | Clean text and use TF-IDF to rank passages relevant to a student's query. | Tentative extension after NLP lessons |
-| Automatic subject tagging | Train a small classifier on notes labelled by subject or topic; compare it with a keyword baseline. | Tentative extension after ML and NLP lessons |
-| Scanned-note preprocessing | Explore resizing, colour conversion, and normalization with OpenCV. This alone will not recognize handwriting or extract text. | Optional extension after image-processing lessons |
+| Question search | Clean text and use TF-IDF to rank stored questions relevant to a query (`text_features.py`, Track A: text). | Built in Part 12 |
+| Question-topic tagging | Train a small classifier that tags a practice question with its topic (Computers, Mathematics, Science, History); compare it with a keyword baseline. | Planned for Part 14 |
+| Scanned-note preprocessing | Not used: we chose Track A (text) instead of image processing. | Dropped |
 
 **Topics after Week 9 are yet to be studied in the proposal's learning plan. We will try to incorporate suitable concepts as we learn them and assess their feasibility. These are planned attempts, not guaranteed features.**
 
-If we develop a classifier, we will evaluate it using held-out material, fit text vectorization on training data only, and report the results actually obtained. Search quality will be checked against relevant passages. No trained model, accuracy score, or AI-generated grading system is claimed at this stage.
+If we develop the topic classifier, we will evaluate it using held-out material, fit text vectorization on training data only, and report the results actually obtained. Search quality will be checked against relevant passages. No trained model, accuracy score, or AI-generated grading system is claimed at this stage.
 
 ## Course concepts
 

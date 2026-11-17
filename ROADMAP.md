@@ -35,11 +35,11 @@ Topics after Week 9 are yet to be studied in the proposal's learning plan. We wi
 
 | Course session | Possible application |
 | --- | --- |
-| Week 10 / Lab 10 | Explore fitting a small notes classifier, train/test splitting, and evaluation. |
+| Week 10 / Lab 10 | Explore fitting a small question-topic classifier, train/test splitting, and evaluation. |
 | Week 11 progress review | Reassess the core scope, progress, and extension feasibility. |
 | Week 12 / Lab 11 | Compare a classifier with a keyword baseline and try cross-validation. |
 | Week 13 / Lab 12 | Clean and normalize text; explore tokenization, Bag-of-Words, and TF-IDF for search and tagging. |
-| Week 14 / Lab 13 | Optionally preprocess scanned notes with OpenCV; do not treat preprocessing as OCR or handwriting recognition. |
+| Week 14 / Lab 13 | Not used: we chose Track A (text) rather than OpenCV image processing. |
 | Week 15 / Lab 14 | Improve documentation and modularity, review privacy and bias, and prepare the demonstration and viva. |
 
 For any classifier, fit preprocessing on training data only and keep evaluation material separate. Report measured results and errors only after experiments are completed. Do not advertise a tentative extension as a finished feature.
