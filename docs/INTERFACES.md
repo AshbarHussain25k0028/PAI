@@ -220,6 +220,10 @@ other by plain name (for example `from users import Student`).
 | `cross_validate` | texts, labels, folds | {model_name: (mean_accuracy, std_accuracy)}. | O(folds * training cost) | Muhammad Mudassir | 14 |
 | `save_results` | results, folder | the Path of the saved metrics file. | O(1) for a fixed number of models | Muhammad Mudassir | 14 |
 | `suggest_topic` | model, vectorizer, question_text | the predicted category name (the teacher can change it). | O(w) for w words | Muhammad Mudassir | 14 |
+| `run_experiment` | cache, folds | dict with labels, counts, split sizes, keyword-baseline score and, per model, accuracy, report, confusion matrix and cross-validation mean/std (`python src/topic_model.py`). | O(folds * training cost) | Muhammad Mudassir | 14 |
+| `train_best` | cache | (model, vectorizer, model_name, test_accuracy) of the better model, for the teacher menu. | O(n * v) | Muhammad Mudassir | 14 |
+| `best_model_name` | results | "naive_bayes" or "logistic_regression" (higher test accuracy). | O(1) | Muhammad Mudassir | 14 |
+| `print_comparison` | results | prints the comparison table. | O(1) | Muhammad Mudassir | 14 |
 
 
 ## Main data structures

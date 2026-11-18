@@ -49,7 +49,7 @@ For any classifier, fit preprocessing on training data only and keep evaluation 
 - [ ] Test permissions, ownership, invalid inputs, missing files, and duplicate IDs.
 - [ ] Test score bounds, incomplete attempts, and submission status changes.
 - [ ] Check optional API failures and local recovery paths.
-- [ ] Evaluate search/tagging if those features are developed.
+- [x] Evaluate search/tagging (Part 14: Naive Bayes vs Logistic Regression vs keyword baseline, results in outputs/results).
 - [ ] Review the repository for private student data and credentials.
 - [ ] Document the actual features, limitations, dependencies, and run commands.
 - [ ] Record each member's completed contributions.

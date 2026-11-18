@@ -31,7 +31,7 @@ We want the AI features to solve specific learning problems, rather than simply 
 | --- | --- | --- |
 | Revision suggestions | Match missed quiz topics to relevant notes and practice. This is a rule-based recommendation method and needs no model training. | Planned core feature |
 | Question search | Clean text and use TF-IDF to rank stored questions relevant to a query (`text_features.py`, Track A: text). | Built in Part 12 |
-| Question-topic tagging | Train a small classifier that tags a practice question with its topic (Computers, Mathematics, Science, History); compare it with a keyword baseline. | Planned for Part 14 |
+| Question-topic tagging | Train a small classifier that tags a practice question with its topic (Computers, Mathematics, Science, History); compare Naive Bayes and Logistic Regression with a keyword baseline (`topic_model.py`, `python src/topic_model.py`); teachers use it through "Suggest topic for my question". | Built in Part 14 |
 | Scanned-note preprocessing | Not used: we chose Track A (text) instead of image processing. | Dropped |
 
 **Topics after Week 9 are yet to be studied in the proposal's learning plan. We will try to incorporate suitable concepts as we learn them and assess their feasibility. These are planned attempts, not guaranteed features.**
@@ -106,7 +106,7 @@ Log in by typing a user ID. The sample data is fictional:
 | User ID | Role | What to try |
 | --- | --- | --- |
 | `S01` – `S08` | Student | My courses and materials, Take a quiz, Practice questions (Open Trivia DB, works offline from the cache), My assignments (see marks, submit), My progress and revision tips |
-| `T01`, `T02` | Teacher | My courses and materials, Quiz results, Mark submissions, Class report (Pandas: averages by course and topic, one row per student, who needs attention) |
+| `T01`, `T02` | Teacher | My courses and materials, Quiz results, Mark submissions, Class report (Pandas: averages by course and topic, one row per student, who needs attention), Suggest topic for my question (classifier advice; the teacher decides) |
 | `A01` | Admin | List accounts, Create an account, Enroll a student, Save data |
 
 Choose a menu line by its number. "Log out" returns to the login prompt; type `Q` there to quit.

@@ -23,6 +23,9 @@ program ends.
 Part 9 adds "Practice questions" for students: extra multiple-choice
 questions from Open Trivia DB, or from the saved cache when offline.
 Part 11 adds the teacher's "Class report" (Pandas tables from analysis.py).
+Part 14 adds the teacher's "Suggest topic for my question": a classifier
+trained on the cached Open Trivia DB questions (topic_model.py) proposes one
+of the four categories, and the teacher keeps the final say.
 """
 
 from __future__ import annotations
@@ -33,9 +36,10 @@ from admin import accounts_by_role, create_account, enroll_student, students_not
 from analysis import print_class_report
 from assignments import submit_work
 from exceptions import DataFileError, LMSError
-from question_api import CATEGORIES, practice_set
+from question_api import CATEGORIES, load_cache, practice_set
 from quizzes import Quiz, merge_topic_results, suggest_revision, weak_topics
 from storage import PROCESSED_DIR, RAW_DIR, DataStore
+from topic_model import suggest_topic, train_best
 from users import find_user
 from utils import ask_choice, ask_int, ask_text, format_datetime, make_id
 
@@ -504,6 +508,44 @@ def show_class_report(store: DataStore, user) -> None:
         print_class_report(store, course)
 
 
+# --------------------------------------------- topic suggestion (Part 14)
+
+_topic_model = None     # (model, vectorizer, name, accuracy), trained on first use
+
+
+def get_topic_model() -> tuple:
+    """Train the topic classifier the first time it is needed, then reuse it.
+
+    Returns:
+        (model, vectorizer, model_name, test_accuracy).
+    Raises:
+        ValidationError: if there are no cached questions to learn from.
+    Complexity: O(n * v) the first time, O(1) afterwards.
+    """
+    global _topic_model
+    if _topic_model is None:
+        _topic_model = train_best(load_cache())
+    return _topic_model
+
+
+def suggest_topic_menu(store: DataStore, user) -> None:
+    """Teacher flow: type a question and see the suggested topic.
+
+    The suggestion is only advice; the teacher decides the real topic.
+
+    Args:
+        store: the loaded DataStore (not needed; same call as other handlers).
+        user: the logged-in Teacher.
+    Complexity: O(w) for a question of w words, after the one-off training.
+    """
+    model, vectorizer, name, accuracy = get_topic_model()
+    question = ask_text("Type your question: ")
+    topic = suggest_topic(model, vectorizer, question)
+    print(f"Suggested category: {topic}")
+    print(f"({name}, {accuracy:.0%} accurate on held-out questions; "
+          "you choose the final topic.)")
+
+
 # --------------------------------------------------- admin menu (Part 8)
 
 def list_accounts(store: DataStore, user) -> None:
@@ -601,6 +643,7 @@ MENU_ACTIONS = {
     "Quiz results": show_quiz_results,
     "Mark submissions": mark_submissions,
     "Class report": show_class_report,
+    "Suggest topic for my question": suggest_topic_menu,
     "List accounts": list_accounts,
     "Create an account": create_account_menu,
     "Enroll a student": enroll_student_menu,

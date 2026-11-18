@@ -178,11 +178,13 @@ class Teacher(User):
         """Menu lines for a teacher.
 
         Returns:
-            list of menu lines (materials, quizzes, marking, class report).
+            list of menu lines (materials, quizzes, marking, class report, topic
+            suggestion).
         Complexity: O(1).
         """
         return ["My courses and materials", "Quiz results",
-                "Mark submissions", "Class report", "Log out"]
+                "Mark submissions", "Class report",
+                "Suggest topic for my question", "Log out"]
 
     def can_view_student(self, student_id: str, courses: dict) -> bool:
         """A teacher may see students enrolled in a course they teach.
