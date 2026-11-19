@@ -107,6 +107,9 @@ def transform_texts(vectorizer, texts: list[str]):
         sparse matrix with one row per text.
     Complexity: O(N) for N words.
     """
+    if not texts:      # sklearn refuses an empty list; return 0 rows instead
+        from scipy.sparse import csr_matrix
+        return csr_matrix((0, len(vectorizer.vocabulary_)))
     return vectorizer.transform(texts)
 
 
