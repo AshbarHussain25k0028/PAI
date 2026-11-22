@@ -62,7 +62,7 @@ other by plain name (for example `from users import Student`).
 | `Student.menu_options` | – | list of menu lines (my courses, quizzes, practice, assignments, progress). | O(1) | Ashbar Hussain | 3, 9 |
 | `Student.can_view_student` | student_id, courses | True only if student_id is their own ID. | O(1) | Ashbar Hussain | 3 |
 | `Teacher.role (property)` | – | "teacher". | O(1) | Ashbar Hussain | 3 |
-| `Teacher.menu_options` | – | list of menu lines (materials, quizzes, marking, class report). | O(1) | Ashbar Hussain | 3 |
+| `Teacher.menu_options` | – | list of menu lines (materials, quizzes, marking, class report, progress charts, topic suggestion). | O(1) | Ashbar Hussain | 3 |
 | `Teacher.can_view_student` | student_id, courses | True if the student is in one of this teacher's courses. | O(c) for c courses (set lookup inside each course) | Ashbar Hussain | 3 |
 | `Admin.role (property)` | – | "admin". | O(1) | Ashbar Hussain | 3 |
 | `Admin.menu_options` | – | list of menu lines (accounts, enrollment, save). | O(1) | Ashbar Hussain | 3 |
@@ -126,6 +126,8 @@ other by plain name (for example `from users import Student`).
 | `run` | – | None (loads data, then login and menu loop until Q or end of input) | O(N) to load, then O(1) per choice | Ashbar Hussain (Part 1), Muhammad Mudassir (Part 7) | 1, 7 |
 | `login` (helper) | store | the logged-in User, or None if Q was typed. | O(1) per attempt | Muhammad Mudassir | 7 |
 | `menu_loop` (helper) | store, user | None; runs `MENU_ACTIONS[line]` for the line chosen from `user.menu_options()` (polymorphism) | O(1) per choice | Muhammad Mudassir | 7 |
+| `show_charts` (helper) | store, user | None; draws the four charts with `charts.make_all_charts`, prints where they were saved and offers to open them; prints the error for missing data | O(a * k + s) | Muhammad Mudassir | after 18 |
+| `open_file` (helper) | path | True if the computer's image viewer started, False if there is none (Windows `os.startfile`, macOS `open`, Linux `xdg-open`) | O(1) | Muhammad Mudassir | after 18 |
 | `courses_for` (helper) | store, user | list of Course objects (enrolled, taught, or all for admin). | O(c) for c courses | Muhammad Mudassir | 7 |
 | `choose_from` (helper) | title, items, label | the chosen item, or None for Back / empty list. | O(n) for n items | Muhammad Mudassir | 7 |
 | `read_note` (helper) | file_name | text of a note in data/raw/notes; DataFileError if missing. | O(k) for k characters | Muhammad Mudassir | 7 |

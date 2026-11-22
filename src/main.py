@@ -26,15 +26,22 @@ Part 11 adds the teacher's "Class report" (Pandas tables from analysis.py).
 Part 14 adds the teacher's "Suggest topic for my question": a classifier
 trained on the cached Open Trivia DB questions (topic_model.py) proposes one
 of the four categories, and the teacher keeps the final say.
+The teacher's "Progress charts" item draws the four charts from charts.py
+with the current data, saves them to outputs/figures/ and can open them in
+the computer's image viewer. The program itself stays a console app.
 """
 
 from __future__ import annotations
 
+import os
+import subprocess
+import sys
 from datetime import datetime
 
 from admin import accounts_by_role, create_account, enroll_student, students_not_in
 from analysis import print_class_report
 from assignments import submit_work
+from charts import make_all_charts
 from exceptions import DataFileError, LMSError
 from question_api import CATEGORIES, load_cache, practice_set
 from quizzes import Quiz, merge_topic_results, suggest_revision, weak_topics
@@ -508,6 +515,54 @@ def show_class_report(store: DataStore, user) -> None:
         print_class_report(store, course)
 
 
+# ------------------------------------------------------ progress charts
+
+def open_file(path) -> bool:
+    """Open a saved file in the computer's default viewer.
+
+    Args:
+        path: the file to open.
+    Returns:
+        True if the viewer was started, False if this computer has none.
+    Complexity: O(1).
+    """
+    try:
+        if sys.platform.startswith("win"):
+            os.startfile(path)                      # Windows only
+        elif sys.platform == "darwin":
+            subprocess.run(["open", str(path)], check=True, timeout=10)
+        else:
+            subprocess.run(["xdg-open", str(path)], check=True, timeout=10)
+    except (OSError, subprocess.SubprocessError):
+        return False
+    return True
+
+
+def show_charts(store: DataStore, user) -> None:
+    """Teacher flow: draw the four progress charts and offer to open them.
+
+    The charts use the data as it is now, so a quiz taken or a mark entered
+    in this session already shows up in them.
+
+    Args:
+        store: the loaded DataStore.
+        user: the logged-in Teacher (not needed; same call as other handlers).
+    Complexity: O(a * k + s) for a attempts of k questions, s submissions
+        (see charts.make_all_charts).
+    """
+    try:
+        paths = make_all_charts(store)
+    except LMSError as error:
+        print(f"Could not draw the charts: {error}")
+        return
+    print("\nCharts saved:")
+    for path in paths:
+        print(f"  {path.parent.parent.name}/{path.parent.name}/{path.name}")
+    if ask_choice("Open the charts now?", ["Yes", "No"]) == 1:
+        if not all([open_file(path) for path in paths]):
+            print("No image viewer found; open the files from the folder above.")
+
+
 # --------------------------------------------- topic suggestion (Part 14)
 
 _topic_model = None     # (model, vectorizer, name, accuracy), trained on first use
@@ -643,6 +698,7 @@ MENU_ACTIONS = {
     "Quiz results": show_quiz_results,
     "Mark submissions": mark_submissions,
     "Class report": show_class_report,
+    "Progress charts": show_charts,
     "Suggest topic for my question": suggest_topic_menu,
     "List accounts": list_accounts,
     "Create an account": create_account_menu,
