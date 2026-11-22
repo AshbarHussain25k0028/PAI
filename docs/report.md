@@ -182,3 +182,4 @@ python src/topic_model.py        # regenerate the model results
 - Open Trivia DB, https://opentdb.com (question data, CC BY-SA 4.0).
 - Python standard library; NumPy, pandas, Matplotlib, seaborn, scikit-learn, requests and pytest (versions pinned in `requirements.txt`).
 - Course material: AL-2001 lab manuals 01–14 and the project guidelines, Fall 2026.
+- AI assistance: the project is built on the code and concepts taught in the AL-2001 labs. An AI assistant (Claude, by Anthropic) was used to improve the code, check it for errors, write and run tests, and explore libraries that were not covered in the labs.
