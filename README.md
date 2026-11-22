@@ -2,69 +2,44 @@
 
 **Learning Management System · Programming for AI semester project**
 
-Notes in one chat, deadlines in another, and the assignment somehow missing? ALPHA LMS aims to bring learning resources, assignments, quizzes, and progress into one place.
+ALPHA LMS is a Python console application for a small class. Students read notes, take quizzes, practise with live questions, submit assignments and get revision tips for weak topics. Teachers mark work, read Pandas class reports and get a topic suggestion for new quiz questions from a small classifier. Admins create accounts and enroll students. Everything runs from the terminal on local files, with fictional demonstration data only. The code uses NumPy, Pandas, Matplotlib, Seaborn and scikit-learn.
 
-ALPHA LMS is a proposed **Python console application** for a small school or college class. Teachers will organize learning activities, students will track their work, and revision suggestions will point them toward topics worth another look.
+## Team
 
-> **Project status: half-project release (v0.5).** The console app runs: login for three roles, courses and notes, quizzes with topic results and revision tips, assignments with submission and marking, account and enrollment management, and saving to local files. The analysis, charts, question API and AI parts listed below are still planned.
+| Team member | Roll number | GitHub | What they built |
+| --- | --- | --- | --- |
+| Ashbar Hussain (group leader) | 25k-0028 | [@AshbarHussain25k0028](https://github.com/AshbarHussain25k0028) | Repo layout and sample data, user roles, JSON/CSV storage, assignments and marking, admin menu, Pandas class report and the Matplotlib/Seaborn charts. |
+| Muhammad Mudassir | 25k-0153 | [@k250153-sudo](https://github.com/k250153-sudo) | Custom exceptions and validated input, courses and quizzes, role menus and revision tips, Open Trivia DB client with offline cache, NumPy score matrix, TF-IDF text features and the topic classifier. |
 
-## What we plan to build
+**Course:** AL-2001 · Programming for Artificial Intelligence (Laboratory) · Section BAI-3A · Fall 2026
 
-| Area | Planned functionality |
-| --- | --- |
-| Accounts and roles | Separate student, teacher, and administrator menus, with enrollment and permission checks. |
-| Courses and materials | Organize courses and share teacher-provided notes and files. |
-| Assignments | Set deadlines, record submissions, and provide teacher-entered marks and feedback. |
-| Quizzes | Run teacher-approved multiple-choice quizzes and record attempts and topic-level results. |
-| Progress | Show completed and missing work, quiz results, and useful charts. |
-| Revision suggestions | Recommend relevant notes and practice topics using quiz mistakes and simple rules. |
+## Features
 
-The first version will serve **one class or department**, using local files. It will use resources already available, such as class lists, notes, questions, and assignment files. Extra hardware and paid AI services will not be required for the core application.
+- Three roles (student, teacher, admin) with separate menus and permission checks.
+- Courses, notes and enrollment (a set, so no duplicates).
+- Multiple-choice quizzes graded per topic, with rule-based revision tips that point to the matching notes.
+- Practice questions from Open Trivia DB, saved to a local cache so they work offline.
+- Assignments with deadlines, late flag, teacher marking (0 to maximum) and feedback.
+- NumPy score matrix (students by quizzes) with missing attempts kept as NaN, percentages and averages without element loops.
+- Pandas class report: cleaning, groupby by course and topic, merge, and a list of students needing attention.
+- Four labelled charts saved to `outputs/figures/`: quiz averages line, assignment completion bar, score histogram and a topic heatmap.
+- Text cleaning and TF-IDF question search.
+- Question-topic classifier (Computers, History, Mathematics, Science & Nature): Naive Bayes against Logistic Regression and a keyword baseline on the same split, with 5-fold cross-validation. Test accuracy: baseline 0.54, Naive Bayes 0.77, Logistic Regression 0.76. Results are in `outputs/results/`.
+- Safe saving (temporary file, then replace), custom exceptions and 377 pytest tests.
 
-Live video classes, fee payments, a public web portal, and institution-wide deployment are outside the initial scope. Teachers will retain control of final marks.
+## Known limitations
 
-## Where AI fits
+- Login is by user ID only, with no password. It is a classroom demo, not real authentication.
+- One user at a time, with data in local JSON and CSV files (no database, no web or GUI).
+- The sample data is small and fictional.
+- Open Trivia DB has only about 60 multiple-choice Mathematics questions, so the classifier is weakest on Mathematics. It was trained on trivia questions, so its topic suggestions on real course questions may be wrong. It only suggests; the teacher decides.
+- Practice questions are not saved to a student's progress.
+- Quiz questions are written in the data files. There is no screen for creating quizzes, and the teacher-approval step for API questions was not built.
+- The requirement to "attach scanned notes" from the proposal was dropped: we chose the text track instead of image processing.
 
-We want the AI features to solve specific learning problems, rather than simply attach an AI label to ordinary record management.
+## Data source
 
-| Feature | Proposed approach | Development stage |
-| --- | --- | --- |
-| Revision suggestions | Match missed quiz topics to relevant notes and practice. This is a rule-based recommendation method and needs no model training. | Planned core feature |
-| Question search | Clean text and use TF-IDF to rank stored questions relevant to a query (`text_features.py`, Track A: text). | Built in Part 12 |
-| Question-topic tagging | Train a small classifier that tags a practice question with its topic (Computers, Mathematics, Science, History); compare Naive Bayes and Logistic Regression with a keyword baseline (`topic_model.py`, `python src/topic_model.py`); teachers use it through "Suggest topic for my question". | Built in Part 14 |
-| Scanned-note preprocessing | Not used: we chose Track A (text) instead of image processing. | Dropped |
-
-**Topics after Week 9 are yet to be studied in the proposal's learning plan. We will try to incorporate suitable concepts as we learn them and assess their feasibility. These are planned attempts, not guaranteed features.**
-
-If we develop the topic classifier, we will evaluate it using held-out material, fit text vectorization on training data only, and report the results actually obtained. Search quality will be checked against relevant passages. No trained model, accuracy score, or AI-generated grading system is claimed at this stage.
-
-## Course concepts
-
-The foundation follows **Labs 01–09** of Programming for Artificial Intelligence:
-
-| Concepts | Intended use |
-| --- | --- |
-| Python basics and control flow | Menus, validation, loops, and list/dictionary comprehensions. |
-| Collections and functions | Course records, enrollments, reusable functions, scope, default arguments, `zip`, `enumerate`, `map`, `filter`, and `lambda`. |
-| Object-oriented programming | A shared `User` class, student/teacher roles, courses, assignments, quizzes, encapsulation, inheritance, and overriding. |
-| Files, exceptions, and APIs | TXT/CSV/JSON storage, recovery from errors, and an optional supplementary question-bank API using `requests`. |
-| NumPy | Array manipulation, broadcasting, vectorized calculations, and comparisons with loops. |
-| Pandas | Loading, cleaning, filtering, transforming, grouping, and merging learning records. |
-| Matplotlib and Seaborn | Progress trends, completion bars, score histograms, scatter plots, and topic-level summaries. |
-
-Later lessons may support train/test splitting, model comparison and cross-validation, text processing, optional image preprocessing, and a stronger documentation and ethical review. See the [roadmap](ROADMAP.md) for the proposed sequence.
-
-## Proposed technology
-
-- **Language:** Python 3
-- **Interface:** console menus
-- **Storage:** local TXT, CSV, JSON, and managed material/submission folders
-- **Analysis:** NumPy and Pandas
-- **Visualization:** Matplotlib and Seaborn; Jupyter Notebooks for exploration
-- **Optional API integration:** `requests`
-- **Possible later additions:** scikit-learn and OpenCV, after the corresponding course sessions
-
-Dependency versions and the final module structure will be documented when implementation begins.
+Practice questions and the classifier's training data come from the free [Open Trivia DB](https://opentdb.com) (https://opentdb.com), whose questions are licensed CC BY-SA 4.0. A saved copy is in `data/raw/opentdb_cache.json`. All users, courses, quizzes, attempts and submissions in `data/raw/` are fictional.
 
 ## Getting started
 
@@ -115,7 +90,7 @@ Choose a menu line by its number. "Log out" returns to the login prompt; type `Q
 
 The first run reads the sample data from `data/raw/`. Every change (new accounts, enrollments, quiz attempts, submissions, marks) is saved to `data/processed/` when you quit, or straight away with the admin's "Save data". Later runs read `data/processed/`. To start again from the sample data, delete the files in `data/processed/` (keep `.gitkeep`).
 
-Practice questions come from the free [Open Trivia DB](https://opentdb.com) API (no key needed; questions are licensed CC BY-SA 4.0). A copy is saved in `data/raw/opentdb_cache.json`, so practice still works with no internet. To refresh the copy (it waits 5 seconds between calls, so it takes a few minutes):
+Practice questions come from the free [Open Trivia DB](https://opentdb.com) API (no key needed). A copy is saved in `data/raw/opentdb_cache.json`, so practice still works with no internet. To refresh the copy (it waits 5 seconds between calls, so it takes a few minutes):
 
 ```bash
 python src/question_api.py
@@ -127,23 +102,10 @@ python src/question_api.py
 python -m pytest -q
 ```
 
-More detail: [module interfaces](docs/INTERFACES.md) · [proposal](docs/proposal.md) · [roadmap](ROADMAP.md) · [contributing guide](CONTRIBUTING.md)
+## Documentation
 
-## Data and responsible use
+[Design document](docs/DESIGN.md) (program flow, data structures, algorithms, complexity, viva questions) · [module interfaces](docs/INTERFACES.md) · [proposal](docs/proposal.md) · [roadmap](ROADMAP.md) · [contributing guide](CONTRIBUTING.md)
 
-We will begin with fictional demonstration accounts and material we have permission to use. Real student identities, grades, submissions, credentials, and API keys must not be committed to this public repository.
+## Responsible use
 
-The intended application will check role and enrollment permissions. Revision suggestions will support practice, not judge a student's ability. Predicted subject labels will be correctable, and teachers will retain control over assessment.
-
-## Team and course
-
-| Team member | Roll number | GitHub |
-| --- | --- | --- |
-| Ashbar Hussain | 25k-0028 | [@AshbarHussain25k0028](https://github.com/AshbarHussain25k0028) |
-| Muhammad Mudassir | 25k-0153 | [@k250153-sudo](https://github.com/k250153-sudo) |
-
-**Course:** AL-2001 · Programming for Artificial Intelligence (Laboratory)  
-**Section:** BAI-3A  
-**Session:** Fall 2026
-
-Individual responsibilities and contributions will be recorded as development progresses.
+Only fictional demonstration data is used. Real student identities, grades, submissions, credentials and API keys must not be committed to this public repository. Role and enrollment checks limit what each user sees. Revision tips support practice and do not judge a student's ability. Predicted topic labels can be corrected, and teachers keep control of assessment.

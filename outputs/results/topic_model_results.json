@@ -1,0 +1,118 @@
+{
+  "labels": [
+    "Computers",
+    "History",
+    "Mathematics",
+    "Science & Nature"
+  ],
+  "counts": {
+    "Computers": 149,
+    "History": 156,
+    "Mathematics": 60,
+    "Science & Nature": 153
+  },
+  "split": {
+    "test_size": 0.25,
+    "random_state": 42,
+    "train": 388,
+    "test": 130,
+    "folds": 5
+  },
+  "baseline": {
+    "accuracy": 0.5384615384615384,
+    "report": "                  precision    recall  f1-score   support\n\n       Computers       0.40      0.95      0.56        37\n         History       1.00      0.41      0.58        39\n     Mathematics       0.50      0.40      0.44        15\nScience & Nature       0.87      0.33      0.48        39\n\n        accuracy                           0.54       130\n       macro avg       0.69      0.52      0.52       130\n    weighted avg       0.73      0.54      0.53       130\n",
+    "confusion": [
+      [
+        35,
+        0,
+        2,
+        0
+      ],
+      [
+        20,
+        16,
+        1,
+        2
+      ],
+      [
+        9,
+        0,
+        6,
+        0
+      ],
+      [
+        23,
+        0,
+        3,
+        13
+      ]
+    ]
+  },
+  "baseline_accuracy": 0.5384615384615384,
+  "models": {
+    "naive_bayes": {
+      "accuracy": 0.7692307692307693,
+      "report": "                  precision    recall  f1-score   support\n\n       Computers       0.78      0.86      0.82        37\n         History       0.78      0.90      0.83        39\n     Mathematics       0.00      0.00      0.00        15\nScience & Nature       0.75      0.85      0.80        39\n\n        accuracy                           0.77       130\n       macro avg       0.58      0.65      0.61       130\n    weighted avg       0.68      0.77      0.72       130\n",
+      "confusion": [
+        [
+          32,
+          4,
+          0,
+          1
+        ],
+        [
+          0,
+          35,
+          0,
+          4
+        ],
+        [
+          5,
+          4,
+          0,
+          6
+        ],
+        [
+          4,
+          2,
+          0,
+          33
+        ]
+      ],
+      "cv_mean": 0.735511575802838,
+      "cv_std": 0.025026012432516755
+    },
+    "logistic_regression": {
+      "accuracy": 0.7615384615384615,
+      "report": "                  precision    recall  f1-score   support\n\n       Computers       0.82      0.73      0.77        37\n         History       0.76      0.90      0.82        39\n     Mathematics       1.00      0.20      0.33        15\nScience & Nature       0.71      0.87      0.78        39\n\n        accuracy                           0.76       130\n       macro avg       0.82      0.67      0.68       130\n    weighted avg       0.79      0.76      0.74       130\n",
+      "confusion": [
+        [
+          27,
+          6,
+          0,
+          4
+        ],
+        [
+          0,
+          35,
+          0,
+          4
+        ],
+        [
+          2,
+          4,
+          3,
+          6
+        ],
+        [
+          4,
+          1,
+          0,
+          34
+        ]
+      ],
+      "cv_mean": 0.7509148618371919,
+      "cv_std": 0.0568265509616471
+    }
+  }
+}
